@@ -1,0 +1,25 @@
+# .NET Core
+[Bb]in/
+[Oo]bj/
+packages/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+[Dd]ebug/
+[Rr]elease/
+appsettings.json
+appsettings.Development.json
+.idea/
+.vs/
+
+# React Native / Expo
+node_modules/
+npm-debug.log
+yarn-error.log
+.expo/
+dist/
+.env
+
+# OS-specific
+.DS_Store

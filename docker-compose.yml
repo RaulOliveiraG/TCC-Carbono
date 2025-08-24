@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Serviço do Banco de Dados SQL Server
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: carbon-db
+    environment:
+      ACCEPT_EULA: "Y"
+      # IMPORTANTE: Use uma senha forte e guarde-a com segurança.
+      # Esta senha será usada pela API para se conectar.
+      MSSQL_SA_PASSWORD: "yourStrong(!)Password123"
+    ports:
+      # Mapeia a porta 1433 do container para a porta 1433 da sua máquina
+      # Isso permite que você se conecte ao banco com o SQL Server Management Studio, se precisar
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+  # Serviço da nossa API .NET
+  api:
+    container_name: carbon-api
+    # Constrói a imagem a partir do Dockerfile no diretório atual
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      # Mapeia a porta 8080 do container para a porta 8080 da sua máquina (HTTP)
+      # Mapeia a porta 8081 do container para a porta 44398 da sua máquina (HTTPS)
+      - "8080:8080"
+      - "44398:8081"
+    environment:
+      # Esta é a chave! A API vai usar esta connection string para encontrar o banco.
+      # Note que o servidor é 'db', o nome do nosso serviço de banco de dados.
+      - ConnectionStrings__DefaultConnection=Server=db;Database=CarbonCreditDB;User Id=sa;Password=yourStrong(!)Password123;TrustServerCertificate=true;
+      # Diz ao ASP.NET para escutar em ambas as portas dentro do container
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      # Configurações para o Kestrel usar o certificado de desenvolvimento
+      - ASPNETCORE_KESTREL__CERTIFICATES__DEFAULT__PASSWORD= # Deixe em branco se não tiver senha
+      - ASPNETCORE_KESTREL__CERTIFICATES__DEFAULT__PATH=/https/aspnetapp.pfx
+    volumes:
+      # Mapeia o certificado de dev do seu PC para dentro do container
+      - ${APPDATA}\Microsoft\UserSecrets\:/https/
+    # Garante que o serviço 'db' esteja pronto antes de iniciar a 'api'
+    depends_on:
+      - db
+
+# Define um volume nomeado para persistir os dados do banco
+volumes:
+  sqlserver_data:
