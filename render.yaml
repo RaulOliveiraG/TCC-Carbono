@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: carbon-credit-api
+    runtime: dotnet
+    rootDir: backend
+    buildCommand: "dotnet publish -c Release -o out"
+    startCommand: "dotnet out/CarbonCredit.AuthAPI.dll"
+    healthCheckPath: /healthz
+    envVars:
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: ConnectionStrings__DefaultConnection
+        fromSecret: ConnectionString
+      - key: JwtSettings__SecretKey
+        fromSecret: JwtSecretKey
