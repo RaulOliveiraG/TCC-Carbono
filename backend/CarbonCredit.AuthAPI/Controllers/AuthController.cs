@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using CarbonCredit.AuthAPI.Models.DTOs;
 using CarbonCredit.AuthAPI.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace CarbonCredit.AuthAPI.Controllers
 {
@@ -13,6 +15,68 @@ namespace CarbonCredit.AuthAPI.Controllers
         public AuthController(IAuthService authService)
         {
             _authService = authService;
+        }
+
+        /// <summary>
+        /// Altera a senha do usuário autenticado.
+        /// </summary>
+        /// <param name="changePasswordDto">Dados para alteração de senha.</param>
+        /// <returns>Resposta da operação de alteração de senha.</returns>
+        [HttpPost("alterar-senha")]
+        [Authorize]
+        public async Task<ActionResult<AuthResponseDto>> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
+            {
+                return Unauthorized(new AuthResponseDto { Success = false, Message = "Token inválido ou ID de usuário ausente." });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new AuthResponseDto { Success = false, Message = "Dados inválidos." });
+            }
+
+            var resultado = await _authService.ChangePasswordAsync(userId, changePasswordDto);
+
+            if (resultado.Success)
+            {
+                return Ok(resultado);
+            }
+
+            // Retorna BadRequest para erros como "Senha atual incorreta"
+            return BadRequest(resultado);
+        }
+
+        /// <summary>
+        /// Atualiza os dados do perfil do usuário autenticado.
+        /// </summary>
+        /// <param name="updateDto">Novos dados do perfil.</param>
+        /// <returns>Resposta da operação de atualização.</returns>
+        [HttpPut("perfil")]
+        [Authorize] // Protege a rota, apenas usuários com token válido podem acessar
+        public async Task<ActionResult<AuthResponseDto>> UpdatePerfil([FromBody] UpdateUsuarioDto updateDto)
+        {
+            // Pega o ID do usuário a partir do token JWT
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
+            {
+                return Unauthorized(new AuthResponseDto { Success = false, Message = "Token inválido ou ID de usuário ausente." });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new AuthResponseDto { Success = false, Message = "Dados inválidos." });
+            }
+
+            var resultado = await _authService.UpdateUsuarioAsync(userId, updateDto);
+
+            if (resultado.Success)
+            {
+                return Ok(resultado);
+            }
+
+            return BadRequest(resultado);
         }
 
         /// <summary>

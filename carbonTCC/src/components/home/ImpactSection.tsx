@@ -3,10 +3,9 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import { COLORS } from '../../constants/colors';
 
 const impactData = [
-  { value: '500K+', label: 'Árvores Plantadas' },
   { value: '100K+', label: 'NFTs Criados' },
   { value: '10K+', label: 'Toneladas de CO₂' },
-  { value: '15+', label: 'Projetos Apoiados' },
+  { value: '15k+', label: 'Hectares Reflorestados' },
 ];
 
 const ImpactStat = ({ value, label }: { value: string; label: string }) => (

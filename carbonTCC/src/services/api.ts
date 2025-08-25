@@ -1,10 +1,9 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
 import { AuthResponse } from '@/types/auth';
 import { LoginData, RegistroData } from '@/utils/validationSchemas';
 
-const API_BASE_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL;
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
 if (!API_BASE_URL) {
   throw new Error('A URL da API (EXPO_PUBLIC_API_URL) não está definida no arquivo .env');
@@ -55,7 +54,7 @@ export const authService = {
         return error.response.data;
       }
       return {
-        success: false,
+        success: false,        
         message: 'Erro de conexão. Verifique sua internet e se o servidor está rodando.',
       };
     }

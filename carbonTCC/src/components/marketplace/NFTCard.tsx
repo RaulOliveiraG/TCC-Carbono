@@ -1,77 +1,76 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { COLORS } from '../../constants/colors';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { COLORS } from '@/constants/colors';
 import { Button } from '../common/Button';
 
-interface NFT {
-  id: string;
+export interface NFTCardProps {
   name: string;
-  co2: string;
   price: string;
+  co2: string;
 }
 
-interface NFTCardProps {
-  nft: NFT;
-}
-
-export function NFTCard({ nft }: NFTCardProps) {
+export function NFTCard({ name, price, co2 }: NFTCardProps) {
   return (
-    <View style={styles.card}>
+    <View style={styles.cardContainer}>
+      {/* Placeholder para a imagem do NFT */}
       <View style={styles.imagePlaceholder} />
-      <View style={styles.content}>
-        <View style={styles.infoContainer}>
-          <Text style={styles.name} numberOfLines={2}>{nft.name}</Text>
-          <Text style={styles.price}>{nft.price}</Text>
+
+      <View style={styles.contentContainer}>
+        <Text style={styles.nftName}>{name}</Text>
+        <Text style={styles.co2Text}>{co2} toneladas de CO₂ compensadas</Text>
+
+        <View style={styles.footer}>
+          <Text style={styles.priceText}>{price}</Text>
+          <Button title="Comprar" onPress={() => {}} />
         </View>
-        <Text style={styles.co2}>{nft.co2}</Text>
-        <Button title="Comprar Agora" onPress={() => {}} style={styles.button} />
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    flex: 1, // Permite que o card ocupe o espaço da coluna
+  cardContainer: {
+    width: '45%', // Para caber 2 por linha com algum espaço
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginBottom: 10, // Espaçamento entre as linhas
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    overflow: 'hidden',
   },
   imagePlaceholder: {
-    height: 120,
+    height: 150,
     backgroundColor: COLORS.border,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
   },
-  content: {
+  contentContainer: {
     padding: 10,
   },
-  infoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start', // Alinha os itens no topo
-    marginBottom: 5,
-    gap: 5, // Espaço entre o nome e o preço
-  },
-  name: {
-    flex: 1, // Permite que o nome ocupe o espaço e quebre a linha
-    fontSize: 14,
+  nftName: {
+    fontSize: 16,
     fontWeight: 'bold',
     color: COLORS.textPrimary,
+    marginBottom: 5,
   },
-  price: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: COLORS.primary,
-  },
-  co2: {
+  co2Text: {
     fontSize: 12,
     color: COLORS.textSecondary,
     marginBottom: 10,
   },
-  button: {
-    width: '100%',
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 'auto',
+  },
+  priceText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.primary,
   },
 });

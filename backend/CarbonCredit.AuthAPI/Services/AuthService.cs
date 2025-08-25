@@ -21,6 +21,82 @@ namespace CarbonCredit.AuthAPI.Services
             _configuration = configuration;
         }
 
+        public async Task<AuthResponseDto> ChangePasswordAsync(int userId, ChangePasswordDto changePasswordDto)
+        {
+            try
+            {
+                var usuario = await _context.Usuarios.FindAsync(userId);
+
+                if (usuario == null)
+                {
+                    return new AuthResponseDto { Success = false, Message = "Usuário não encontrado." };
+                }
+
+                // 1. Verificar se a senha atual fornecida está correta
+                if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.SenhaAtual, usuario.Senha))
+                {
+                    return new AuthResponseDto { Success = false, Message = "Senha atual incorreta." };
+                }
+
+                // 2. Hashear e atualizar para a nova senha
+                usuario.Senha = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NovaSenha);
+
+                _context.Usuarios.Update(usuario);
+                await _context.SaveChangesAsync();
+
+                return new AuthResponseDto
+                {
+                    Success = true,
+                    Message = "Senha alterada com sucesso."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new AuthResponseDto
+                {
+                    Success = false,
+                    Message = $"Erro interno do servidor: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<AuthResponseDto> UpdateUsuarioAsync(int userId, UpdateUsuarioDto updateDto)
+        {
+            try
+            {
+                var usuario = await _context.Usuarios.FindAsync(userId);
+
+                if (usuario == null)
+                {
+                    return new AuthResponseDto { Success = false, Message = "Usuário não encontrado." };
+                }
+
+                usuario.Nome = updateDto.Nome;
+                usuario.Telefone = updateDto.Telefone;
+                // A data de atualização será tratada pelo SaveChangesAsync do DbContext
+
+                _context.Usuarios.Update(usuario);
+                await _context.SaveChangesAsync();
+
+                var usuarioDto = MapearUsuarioParaDto(usuario);
+
+                return new AuthResponseDto
+                {
+                    Success = true,
+                    Message = "Perfil atualizado com sucesso.",
+                    Usuario = usuarioDto
+                };
+            }
+            catch (Exception ex)
+            {
+                return new AuthResponseDto
+                {
+                    Success = false,
+                    Message = $"Erro interno do servidor: {ex.Message}"
+                };
+            }
+        }
+
         public async Task<AuthResponseDto> RegistrarUsuarioAsync(RegistroDto registroDto)
         {
             try

@@ -1,83 +1,51 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { COLORS } from '@/constants/colors';
 import { Button } from '@/components/common/Button';
 import { NFTCard } from '@/components/marketplace/NFTCard';
-import { COLORS } from '@/constants/colors';
-
-const nfts = [
-  { id: '1', name: 'Cerrado NFT #401', co2: '6 toneladas de CO₂ compensadas', price: '1.2 ETH' },
-  { id: '2', name: 'Amazônia NFT #256', co2: '8 toneladas de CO₂ compensadas', price: '1.5 ETH' },
-  { id: '3', name: 'Mata Atlântica NFT #789', co2: '5 toneladas de CO₂ compensadas', price: '1.1 ETH' },
-  { id: '4', name: 'Cerrado NFT #402', co2: '6 toneladas de CO₂ compensadas', price: '1.2 ETH' },
-  { id: '5', name: 'Amazônia NFT #257', co2: '8 toneladas de CO₂ compensadas', price: '1.5 ETH' },
-  { id: '6', name: 'Mata Atlântica NFT #790', co2: '5 toneladas de CO₂ compensadas', price: '1.1 ETH' },
-];
-
-const FilterPill = ({ label, active }: { label: string; active?: boolean }) => (
-  <View style={[styles.pill, active && styles.activePill]}>
-    <Text style={[styles.pillText, active && styles.activePillText]}>{label}</Text>
-  </View>
-);
-
-// Componente de Cabeçalho para a FlatList
-const ListHeader = () => (
-  <>
-    <View style={styles.headerSection}>
-      <Text style={styles.tag}>Marketplace</Text>
-      <Text style={styles.title}>Explore Nossos NFTs</Text>
-      <Text style={styles.subtitle}>
-        Descubra coleções exclusivas de NFTs que representam árvores reais e geram créditos de carbono.
-      </Text>
-    </View>
-
-    {/* Filtros agora estão em uma ScrollView horizontal para evitar quebra de layout */}
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.filterContainer}
-    >
-      <FilterPill label="Destaques" active />
-      <FilterPill label="Amazônia" />
-      <FilterPill label="Mata Atlântica" />
-      <FilterPill label="Cerrado" />
-      <FilterPill label="Caatinga" />
-    </ScrollView>
-  </>
-);
-
-// Componente de Rodapé para a FlatList
-const ListFooter = () => (
-  <>
-    <View style={styles.advancedFilters}>
-      <Text style={styles.advancedFiltersTitle}>Filtros Avançados</Text>
-      <Text style={styles.advancedFiltersSubtitle}>
-        Encontre o NFT perfeito para seu investimento em sustentabilidade.
-      </Text>
-      <Button title="Aplicar Filtros" onPress={() => {}} />
-    </View>
-    <Footer />
-  </>
-);
+import { FilterModal } from '@/components/marketplace/FilterModal';
+import { CategoryCarousel } from '@/components/marketplace/CategoryCarousel';
 
 export default function MarketplaceScreen() {
+  const [isFilterModalVisible, setFilterModalVisible] = useState(false);
+
   return (
     <View style={styles.container}>
       <Header />
-      {/* 
-        A FlatList agora é o componente principal de rolagem,
-        eliminando o erro de aninhamento.
-      */}
-      <FlatList
-        data={nfts}
-        renderItem={({ item }) => <NFTCard nft={item} />}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        ListHeaderComponent={ListHeader}
-        ListFooterComponent={ListFooter}
-        contentContainerStyle={styles.listContentContainer}
-        columnWrapperStyle={styles.row}
+      <ScrollView>
+        <View style={styles.pageHeader}>
+          <Text style={styles.title}>Explore Nossos NFTs</Text>
+          <Text style={styles.subtitle}>
+            Descubra coleções exclusivas de NFTs que representam árvores reais e geram créditos de carbono.
+          </Text>
+        </View>
+
+        {/* --- INÍCIO DA MODIFICAÇÃO --- */}
+        {/* Seção do Carrossel de Categorias */}
+        <CategoryCarousel />
+
+        {/* Seção de Filtros e Ações */}
+        <View style={styles.actionsSection}>
+          <Text style={styles.resultsText}>Exibindo 128 resultados</Text>
+          <Button title="Filtros" onPress={() => setFilterModalVisible(true)} variant="outline" />
+        </View>
+        {/* --- FIM DA MODIFICAÇÃO --- */}
+
+        <View style={styles.nftGrid}>
+          <NFTCard name="Cerrado NFT #401" price="1.2 ETH" co2="6" />
+          <NFTCard name="Amazônia NFT #215" price="2.5 ETH" co2="12" />
+          <NFTCard name="Mata Atlântica NFT #087" price="1.8 ETH" co2="9" />
+          <NFTCard name="Cerrado NFT #552" price="1.3 ETH" co2="7" />
+        </View>
+
+        <Footer />
+      </ScrollView>
+
+      <FilterModal
+        visible={isFilterModalVisible}
+        onClose={() => setFilterModalVisible(false)}
       />
     </View>
   );
@@ -88,20 +56,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  headerSection: {
+  pageHeader: {
     paddingHorizontal: 20,
     paddingTop: 20,
-    alignItems: 'center',
-  },
-  tag: {
-    backgroundColor: COLORS.primaryLight,
-    color: COLORS.primaryDark,
-    fontSize: 14,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 5,
-    overflow: 'hidden',
-    marginBottom: 15,
+    paddingBottom: 10,
+    backgroundColor: COLORS.white, // Mudado para branco para melhor contraste com o carrossel
   },
   title: {
     fontSize: 32,
@@ -114,53 +73,28 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     textAlign: 'center',
     marginTop: 10,
-    marginBottom: 20,
   },
-  filterContainer: {
+  // --- INÍCIO DA MODIFICAÇÃO ---
+  actionsSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 20,
-    paddingBottom: 20,
-    gap: 10,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: COLORS.border,
   },
-  pill: {
-    backgroundColor: '#f0f0f0',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-  },
-  activePill: {
-    backgroundColor: COLORS.primaryLighter,
-  },
-  pillText: {
+  resultsText: {
     color: COLORS.textSecondary,
     fontWeight: '500',
   },
-  activePillText: {
-    color: COLORS.primaryDark,
-  },
-  listContentContainer: {
+  // --- FIM DA MODIFICAÇÃO ---
+  nftGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
     paddingHorizontal: 10,
-  },
-  row: {
-    gap: 10, // Adiciona espaçamento entre as colunas
-  },
-  advancedFilters: {
-    padding: 20,
-    marginHorizontal: 10,
-    marginTop: 20,
-    backgroundColor: COLORS.primaryLighter,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  advancedFiltersTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: COLORS.textPrimary,
-    marginBottom: 10,
-  },
-  advancedFiltersSubtitle: {
-    fontSize: 14,
-    color: COLORS.textSecondary,
-    textAlign: 'center',
-    marginBottom: 20,
+    paddingTop: 20, // Adicionado espaço no topo da grade
   },
 });

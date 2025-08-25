@@ -9,7 +9,7 @@ interface Step {
 }
 
 const steps: Step[] = [
-  { id: 1, title: 'Plantio', description: 'Cada árvore é registrada na blockchain e transformada em NFT único.' },
+  { id: 1, title: 'Plantio', description: 'Árvores plantadas e cultivadas por nós, você não se preocupa com nada!' },
   { id: 2, title: 'Tokenização', description: 'Cada árvore é registrada na blockchain e transformada em NFT único.' },
   { id: 3, title: 'Certificação', description: 'À medida que as árvores crescem, geram créditos de carbono verificados.' },
   { id: 4, title: 'Marketplace', description: 'Compre, venda ou troque NFTs com valor ambiental real no nosso marketplace.' },

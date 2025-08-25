@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarbonCredit.AuthAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class FinalPostgresSetup : Migration
+    public partial class InitialRenderDbSetup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

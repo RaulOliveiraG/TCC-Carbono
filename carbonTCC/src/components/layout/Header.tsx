@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useRouter } from 'expo-router'; // Importar o useRouter
+import { Image, Modal, StyleSheet, Text, TouchableOpacity, View, Pressable } from 'react-native'; // Adicionado Pressable
+import { useRouter } from 'expo-router';
 import { useResponsive } from '@/hooks/useResponsive';
 import { COLORS } from '@/constants/colors';
-// --- INÍCIO DA MODIFICAÇÃO ---
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '../common/Button'; // Usaremos nosso botão padrão
-// --- FIM DA MODIFICAÇÃO ---
+import { Button } from '../common/Button';
 
 interface HeaderProps {
   onHowItWorksPress?: () => void;
@@ -18,8 +16,25 @@ interface MenuItemsProps {
 }
 
 const MenuItems = ({ onHowItWorksPress, onItemPress }: MenuItemsProps) => {
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
+
   const handleHowItWorksPress = () => {
-    onHowItWorksPress?.();
+    if (onHowItWorksPress) {
+      onHowItWorksPress();
+    } else {
+      router.push('/home');
+    }
+    onItemPress?.();
+  };
+
+  const handleMarketplacePress = () => {
+    router.push('/marketplace');
+    onItemPress?.();
+  };
+
+    const handleSettingsPress = () => {
+    router.push('/settings');
     onItemPress?.();
   };
 
@@ -28,9 +43,14 @@ const MenuItems = ({ onHowItWorksPress, onItemPress }: MenuItemsProps) => {
       <TouchableOpacity style={styles.navItem} onPress={handleHowItWorksPress}>
         <Text style={styles.navText}>Como Funciona</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.navItem}>
+      <TouchableOpacity style={styles.navItem} onPress={handleMarketplacePress}>
         <Text style={styles.navText}>Marketplace</Text>
       </TouchableOpacity>
+      {isAuthenticated && (
+        <TouchableOpacity style={styles.navItem} onPress={handleSettingsPress}>
+          <Text style={styles.navText}>Configurações</Text>
+        </TouchableOpacity>
+      )}
     </>
   );
 };
@@ -39,26 +59,24 @@ export function Header({ onHowItWorksPress }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isMobile } = useResponsive();
   const router = useRouter();
-
-  // --- INÍCIO DA MODIFICAÇÃO ---
   const { isAuthenticated, logout } = useAuth();
 
   const handleLogout = async () => {
     await logout();
-    // Após o logout, redireciona para a tela de login
     router.replace('/login');
   };
-  // --- FIM DA MODIFICAÇÃO ---
 
   const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
   return (
     <View style={styles.header}>
-      <Image
-        source={require('../../assets/images/logoText.png')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
+      <TouchableOpacity onPress={() => router.push('/home')}>
+        <Image
+          source={require('../../assets/images/logoText.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
 
       {isMobile ? (
         <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
@@ -71,38 +89,42 @@ export function Header({ onHowItWorksPress }: HeaderProps) {
       ) : (
         <View style={styles.desktopNav}>
           <MenuItems onHowItWorksPress={onHowItWorksPress} />
-          {/* --- INÍCIO DA MODIFICAÇÃO --- */}
           {isAuthenticated ? (
             <Button title="Sair" onPress={handleLogout} variant="outline" />
           ) : (
             <Button title="Entrar" onPress={() => router.push('/login')} />
           )}
-          {/* --- FIM DA MODIFICAÇÃO --- */}
         </View>
       )}
 
       <Modal visible={isMenuOpen} transparent animationType="slide" onRequestClose={toggleMenu}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+        {/* --- INÍCIO DA MODIFICAÇÃO --- */}
+        {/* O View do overlay foi trocado por um Pressable que fecha o menu ao ser tocado */}
+        <Pressable style={styles.modalOverlay} onPress={toggleMenu}>
+          {/* Adicionamos um Pressable em volta do conteúdo para impedir que o toque "vaze" para o overlay */}
+          <Pressable style={styles.modalContent}>
             <MenuItems onHowItWorksPress={onHowItWorksPress} onItemPress={toggleMenu} />
-            {/* --- INÍCIO DA MODIFICAÇÃO --- */}
+            
             {isAuthenticated ? (
-              <Button title="Sair" onPress={handleLogout} style={{ width: '100%' }} />
+              // Quando logado, o botão "Sair" tem o estilo 'outline'
+              <Button title="Sair" onPress={handleLogout} variant="outline" style={{ width: '100%' }} />
             ) : (
-              <Button title="Entrar" onPress={() => router.push('/login')} style={{ width: '100%' }} />
+              // Quando deslogado, mostramos o botão "Entrar" e o "Fechar"
+              <>
+                <Button title="Entrar" onPress={() => { toggleMenu(); router.push('/login'); }} style={{ width: '100%' }} />
+                <TouchableOpacity style={styles.closeButton} onPress={toggleMenu}>
+                  <Text style={styles.closeButtonText}>Fechar</Text>
+                </TouchableOpacity>
+              </>
             )}
-            <TouchableOpacity style={styles.closeButton} onPress={toggleMenu}>
-              <Text style={styles.closeButtonText}>Fechar</Text>
-            </TouchableOpacity>
-            {/* --- FIM DA MODIFICAÇÃO --- */}
-          </View>
-        </View>
+          </Pressable>
+        </Pressable>
+        {/* --- FIM DA MODIFICAÇÃO --- */}
       </Modal>
     </View>
   );
 }
 
-// ... (estilos)
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
@@ -118,13 +140,6 @@ const styles = StyleSheet.create({
   desktopNav: { flexDirection: 'row', alignItems: 'center', gap: 20 },
   navItem: { paddingHorizontal: 10, paddingVertical: 8 },
   navText: { fontSize: 14, color: COLORS.textPrimary },
-  loginButton: {
-    backgroundColor: COLORS.primary,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 5,
-  },
-  loginText: { color: COLORS.white, fontSize: 14, fontWeight: '500' },
   menuButton: { padding: 10 },
   menuIcon: { width: 24, height: 18, justifyContent: 'space-between' },
   menuLine: { height: 2, width: '100%', backgroundColor: COLORS.textPrimary, borderRadius: 1 },
@@ -142,7 +157,6 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   closeButton: {
-    marginTop: 20,
     padding: 15,
     backgroundColor: COLORS.primary,
     borderRadius: 10,

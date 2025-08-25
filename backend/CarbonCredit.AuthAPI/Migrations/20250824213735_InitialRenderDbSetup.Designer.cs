@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarbonCredit.AuthAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250824184325_FinalPostgresSetup")]
-    partial class FinalPostgresSetup
+    [Migration("20250824213735_InitialRenderDbSetup")]
+    partial class InitialRenderDbSetup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
