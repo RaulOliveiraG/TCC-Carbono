@@ -7,13 +7,12 @@ import { Button } from '@/components/common/Button';
 import { SalesCard } from '@/components/home/SalesCard';
 import { ProcessSection } from '@/components/home/ProcessSection';
 import { ImpactSection } from '@/components/home/ImpactSection';
-import { COLORS } from '@/constants/colors';
-import { useRouter } from 'expo-router'; // Importado o useRouter
+import { useThemeColors } from '@/styles/theme';
 
 export default function HomePage() {
-  const router = useRouter(); // Hook para navegação
   const scrollViewRef = useRef<ScrollView>(null);
   const processSectionY = useRef(0);
+  const colors = useThemeColors();
 
   const handleScrollToProcess = () => {
     if (scrollViewRef.current) {
@@ -24,28 +23,22 @@ export default function HomePage() {
     }
   };
 
-  // Função para navegar para o marketplace
-  const navigateToMarketplace = () => {
-    router.push('/marketplace');
-  };
-
   return (
-    <View style={styles.mainContainer}>
+    <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
       <Header onHowItWorksPress={handleScrollToProcess} />
       <ScrollView ref={scrollViewRef}>
-        <View style={styles.heroSection}>
+        <View style={[styles.heroSection, { borderBottomColor: colors.border }]}>
           <LinearGradient
-            colors={['rgba(255, 255, 255, 0)', COLORS.primaryExtraLight]}
+            colors={[colors.transparent, colors.primaryLighter]}
             style={styles.gradient}
           />
-          <Text style={styles.tag}>Inovação em Sustentabilidade</Text>
-          <Text style={styles.sectionTitle}>Transforme Árvores em NFTs e Créditos de Carbono</Text>
-          <Text style={styles.sectionText}>
+          <Text style={[styles.tag, { backgroundColor: colors.primaryLight, color: colors.primaryDark }]}>Inovação em Sustentabilidade</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Transforme Árvores em NFTs e Créditos de Carbono</Text>
+          <Text style={[styles.sectionText, { color: colors.textSecondary }]}>
             Nosso marketplace conecta reflorestamento ao mundo digital, permitindo que você invista em NFTs com valor real para o planeta.
           </Text>
           <View style={styles.buttonContainer}>
-            {/* O botão "Explorar NFTs" agora navega para a nova tela */}
-            <Button title="Explorar NFTs" onPress={navigateToMarketplace} />
+            <Button title="Explorar NFTs" onPress={() => {}} />
             <Button title="Saiba Mais" onPress={handleScrollToProcess} variant="outline" />
           </View>
           <SalesCard
@@ -70,16 +63,13 @@ export default function HomePage() {
   );
 }
 
-// Os estilos permanecem os mesmos
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   heroSection: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
   },
   gradient: {
     position: 'absolute',
@@ -89,8 +79,6 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   tag: {
-    backgroundColor: COLORS.primaryLight,
-    color: COLORS.primaryDark,
     fontSize: 14,
     paddingVertical: 6,
     paddingHorizontal: 10,
@@ -103,12 +91,10 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: COLORS.textPrimary,
   },
   sectionText: {
     fontSize: 16,
     lineHeight: 20,
-    color: COLORS.textSecondary,
     marginBottom: 24,
   },
   buttonContainer: {

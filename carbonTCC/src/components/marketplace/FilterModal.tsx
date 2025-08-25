@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { COLORS } from '@/constants/colors';
+import { useThemeColors } from '@/styles/theme';
 import { Button } from '../common/Button';
 
 interface FilterModalProps {
@@ -8,21 +8,25 @@ interface FilterModalProps {
   onClose: () => void;
 }
 
-// Componente simples para um seletor (simulado)
-const FilterSelector = ({ label, options }: { label: string; options: string[] }) => (
-  <View style={styles.filterGroup}>
-    <Text style={styles.filterLabel}>{label}</Text>
-    <View style={styles.optionsContainer}>
-      {options.map(option => (
-        <TouchableOpacity key={option} style={styles.optionButton}>
-          <Text style={styles.optionText}>{option}</Text>
-        </TouchableOpacity>
-      ))}
+const FilterSelector = ({ label, options }: { label: string; options: string[] }) => {
+  const colors = useThemeColors();
+  return (
+    <View style={styles.filterGroup}>
+      <Text style={[styles.filterLabel, { color: colors.textPrimary }]}>{label}</Text>
+      <View style={styles.optionsContainer}>
+        {options.map(option => (
+          <TouchableOpacity key={option} style={[styles.optionButton, { backgroundColor: colors.primaryLighter, borderColor: colors.primaryLight }]}>
+            <Text style={[styles.optionText, { color: colors.primaryDark }]}>{option}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 export function FilterModal({ visible, onClose }: FilterModalProps) {
+  const colors = useThemeColors();
+
   return (
     <Modal
       animationType="slide"
@@ -30,12 +34,12 @@ export function FilterModal({ visible, onClose }: FilterModalProps) {
       visible={visible}
       onRequestClose={onClose}
     >
-      <View style={styles.modalContainer}>
+      <View style={[styles.modalContainer, { backgroundColor: colors.background }]}>
         <ScrollView>
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>Filtros Avançados</Text>
+          <View style={[styles.header, { borderBottomColor: colors.border }]}>
+            <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Filtros Avançados</Text>
             <TouchableOpacity onPress={onClose}>
-              <Text style={styles.closeButtonText}>Fechar</Text>
+              <Text style={[styles.closeButtonText, { color: colors.primary }]}>Fechar</Text>
             </TouchableOpacity>
           </View>
 
@@ -43,11 +47,10 @@ export function FilterModal({ visible, onClose }: FilterModalProps) {
             <FilterSelector label="Região" options={['Amazônia', 'Mata Atlântica', 'Cerrado']} />
             <FilterSelector label="Preço (ETH)" options={['Até 1', '1 - 5', '5+']} />
             <FilterSelector label="Créditos de Carbono (toneladas)" options={['1-10', '11-50', '50+']} />
-            {/* Adicione mais filtros aqui conforme necessário */}
           </View>
         </ScrollView>
 
-        <View style={styles.footer}>
+        <View style={[styles.footer, { borderTopColor: colors.border, backgroundColor: colors.card }]}>
           <Button title="Limpar Filtros" onPress={() => {}} variant="outline" />
           <Button title="Aplicar Filtros" onPress={onClose} />
         </View>
@@ -59,8 +62,7 @@ export function FilterModal({ visible, onClose }: FilterModalProps) {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: COLORS.background,
-    paddingTop: 50, // Espaço para a status bar
+    paddingTop: 50,
   },
   header: {
     flexDirection: 'row',
@@ -69,16 +71,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
   },
   headerTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: COLORS.textPrimary,
   },
   closeButtonText: {
     fontSize: 16,
-    color: COLORS.primary,
   },
   filtersContent: {
     padding: 20,
@@ -89,7 +88,6 @@ const styles = StyleSheet.create({
   filterLabel: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.textPrimary,
     marginBottom: 12,
   },
   optionsContainer: {
@@ -100,20 +98,14 @@ const styles = StyleSheet.create({
   optionButton: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: COLORS.primaryLighter,
     borderWidth: 1,
-    borderColor: COLORS.primaryLight,
     borderRadius: 20,
   },
-  optionText: {
-    color: COLORS.primaryDark,
-  },
+  optionText: {},
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 20,
     borderTopWidth: 1,
-    borderTopColor: COLORS.border,
-    backgroundColor: COLORS.white,
   },
 });

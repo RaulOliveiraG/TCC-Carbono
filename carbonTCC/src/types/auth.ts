@@ -3,7 +3,10 @@ import { LoginData, RegistroData } from "@/utils/validationSchemas";
 export enum TipoUsuario {
   INVESTIDOR = 'INVESTIDOR',
   EMPRESA_COMPRADORA = 'EMPRESA_COMPRADORA',
+  // --- INÍCIO DA MODIFICAÇÃO ---
+  // Corrigimos o erro de digitação de 'PROPRIETario_TERRA' para 'PROPRIETARIO_TERRA'
   PROPRIETARIO_TERRA = 'PROPRIETARIO_TERRA',
+  // --- FIM DA MODIFICAÇÃO ---
   ADMIN = 'ADMIN'
 }
 
@@ -51,7 +54,7 @@ export interface AuthContextType {
   register: (data: RegistroData) => Promise<AuthResponse>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
+  setUser: (user: Usuario | null) => void;
 }
 
-// Exportamos os tipos novamente para que outros arquivos que importavam daqui continuem funcionando
 export type { LoginData, RegistroData };

@@ -2,25 +2,32 @@ import { useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import { COLORS } from '@/constants/colors';
-import { useAuth } from '@/contexts/AuthContext';
+// --- INÍCIO DA MODIFICAÇÃO ---
+import { useThemeColors } from '@/styles/theme'; // Importamos o novo hook
+import { useAuth } from '@/contexts/AuthProvider';
+// --- FIM DA MODIFICAÇÃO ---
 
 export default function SplashScreen() {
   const router = useRouter();
   const opacity = useSharedValue(1);
   const scale = useSharedValue(1);
-
+  // --- INÍCIO DA MODIFICAÇÃO ---
+  const colors = useThemeColors(); // Usamos o hook para obter as cores
   const { isAuthenticated, isLoading } = useAuth();
+  // --- FIM DA MODIFICAÇÃO ---
 
   useEffect(() => {
     if (!isLoading) {
-      if (isAuthenticated) {
-        router.replace('/home');
-      } else {
-        router.replace('/login');
-      }
+      // Adicionamos um pequeno delay para a animação ser visível
+      setTimeout(() => {
+        if (isAuthenticated) {
+          router.replace({ pathname: '/home' });
+        } else {
+          router.replace({ pathname: '/login' });
+        }
+      }, 1500); // Tempo da animação
     }
-  }, [isLoading, isAuthenticated, router]); 
+  }, [isLoading, isAuthenticated, router]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -28,20 +35,22 @@ export default function SplashScreen() {
   }));
 
   return (
-    <View style={styles.container}>
+    // --- INÍCIO DA MODIFICAÇÃO ---
+    // Aplicamos a cor de fundo dinâmica
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Animated.Image
         source={require('../src/assets/images/logo.png')}
         style={[styles.logo, animatedStyle]}
         resizeMode="contain"
       />
     </View>
+    // --- FIM DA MODIFICAÇÃO ---
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
     alignItems: 'center',
     justifyContent: 'center',
   },

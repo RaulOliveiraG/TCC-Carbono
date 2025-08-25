@@ -13,6 +13,35 @@ export const loginSchema = yup.object({
 // Gera e exporta o tipo LoginData diretamente do schema
 export type LoginData = yup.InferType<typeof loginSchema>;
 
+export const changePasswordSchema = yup.object({
+  senhaAtual: yup
+    .string()
+    .required('Senha atual é obrigatória'),
+  novaSenha: yup
+    .string()
+    .required('Nova senha é obrigatória')
+    .min(6, 'Nova senha deve ter no mínimo 6 caracteres'),
+  confirmacaoNovaSenha: yup
+    .string()
+    .required('Confirmação de senha é obrigatória')
+    .oneOf([yup.ref('novaSenha')], 'As senhas não coincidem'),
+}).required();
+
+export type ChangePasswordData = yup.InferType<typeof changePasswordSchema>;
+
+export const updateProfileSchema = yup.object({
+  nome: yup
+    .string()
+    .required('Nome é obrigatório')
+    .max(255, 'Nome deve ter no máximo 255 caracteres'),
+  telefone: yup
+    .string()
+    .nullable()
+    .max(20, 'Telefone deve ter no máximo 20 caracteres'),
+}).required();
+
+export type UpdateProfileData = yup.InferType<typeof updateProfileSchema>;
+
 // Schema de Registro
 export const registroSchema = yup.object({
   nome: yup

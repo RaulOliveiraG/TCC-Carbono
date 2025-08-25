@@ -15,10 +15,12 @@ import { useRouter } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LinearGradient } from 'expo-linear-gradient';
-import Constants from 'expo-constants';
-import { useAuth } from '@/contexts/AuthContext';
-import { LoginData } from '@/types/auth';
-import { loginSchema } from '@/utils/validationSchemas';
+import { useAuth } from '@/contexts/AuthProvider';
+import { loginSchema, LoginData } from '@/utils/validationSchemas';
+// --- INÍCIO DA MODIFICAÇÃO ---
+// Importamos as cores estáticas do tema claro
+import { lightThemeColors as colors } from '@/styles/theme';
+// --- FIM DA MODIFICAÇÃO ---
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -29,24 +31,22 @@ export default function LoginScreen() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginData>({
-    resolver: yupResolver<LoginData>(loginSchema),
+  } = useForm({
+    resolver: yupResolver(loginSchema),
     defaultValues: {
       email: '',
       senha: '',
     },
   });
+
   const onSubmit = async (data: LoginData) => {
     setIsLoading(true);
     try {
       const response = await login(data);
-      
       if (response.success) {
-        Alert.alert('Sucesso', response.message, [
-          { text: 'OK', onPress: () => router.replace('/home') }
-        ]);
+        // A navegação para home já é tratada pelo AuthProvider/SplashScreen
       } else {
-        Alert.alert('Erro', response.message);
+        Alert.alert('Erro de Login', response.message || 'Credenciais inválidas.');
       }
     } catch (error) {
       Alert.alert('Erro', 'Ocorreu um erro inesperado. Tente novamente.');
@@ -132,7 +132,7 @@ export default function LoginScreen() {
 
               <View style={styles.footer}>
                 <Text style={styles.footerText}>Não tem uma conta? </Text>
-                <TouchableOpacity onPress={() => router.push('/registro')}>
+                <TouchableOpacity onPress={() => router.push({ pathname: '/registro' })}>
                   <Text style={styles.linkText}>Cadastre-se</Text>
                 </TouchableOpacity>
               </View>
@@ -144,6 +144,7 @@ export default function LoginScreen() {
   );
 }
 
+// Estilos estáticos para o tema claro
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -166,19 +167,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.white,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#E8F5E8',
+    color: colors.primaryLighter,
     textAlign: 'center',
   },
   form: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 16,
     padding: 24,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: {
       width: 0,
       height: 4,
@@ -193,12 +194,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.border,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 18,
     fontWeight: '600',
   },
@@ -244,4 +245,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

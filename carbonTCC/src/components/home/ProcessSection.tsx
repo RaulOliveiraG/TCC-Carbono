@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { COLORS } from '../../constants/colors';
+import { useThemeColors } from '@/styles/theme';
 
 interface Step {
   id: number;
@@ -9,26 +9,31 @@ interface Step {
 }
 
 const steps: Step[] = [
-  { id: 1, title: 'Plantio', description: 'Árvores plantadas e cultivadas por nós, você não se preocupa com nada!' },
+  { id: 1, title: 'Plantio', description: 'Árvores são plantadas em projetos de reflorestamento certificados.' },
   { id: 2, title: 'Tokenização', description: 'Cada árvore é registrada na blockchain e transformada em NFT único.' },
-  { id: 3, title: 'Certificação', description: 'À medida que as árvores crescem, geram créditos de carbono verificados.' },
+  { id: 3, title: 'Geração de Créditos', description: 'À medida que as árvores crescem, geram créditos de carbono verificados.' },
   { id: 4, title: 'Marketplace', description: 'Compre, venda ou troque NFTs com valor ambiental real no nosso marketplace.' },
 ];
 
-const StepItem = ({ step }: { step: Step }) => (
-  <View style={styles.stepItem}>
-    <Text style={styles.stepNumberText}>{step.id}</Text>
-    <Text style={styles.stepTitle}>{step.title}</Text>
-    <Text style={styles.stepText}>{step.description}</Text>
-  </View>
-);
+const StepItem = ({ step }: { step: Step }) => {
+  const colors = useThemeColors();
+  return (
+    <View style={styles.stepItem}>
+      <Text style={[styles.stepNumberText, { color: colors.primaryDark, backgroundColor: colors.primaryLight }]}>{step.id}</Text>
+      <Text style={[styles.stepTitle, { color: colors.textPrimary }]}>{step.title}</Text>
+      <Text style={[styles.stepText, { color: colors.textSecondary }]}>{step.description}</Text>
+    </View>
+  );
+};
 
 export function ProcessSection() {
+  const colors = useThemeColors();
+
   return (
-    <View style={styles.section}>
-      <Text style={styles.tag}>Processo</Text>
-      <Text style={styles.sectionSubTitle}>Como Funciona</Text>
-      <Text style={styles.sectionText}>
+    <View style={[styles.section, { backgroundColor: colors.primaryLighter }]}>
+      <Text style={[styles.tag, { backgroundColor: colors.primaryLight, color: colors.primaryDark }]}>Processo</Text>
+      <Text style={[styles.sectionSubTitle, { color: colors.textPrimary }]}>Como Funciona</Text>
+      <Text style={[styles.sectionText, { color: colors.textSecondary }]}>
         Um processo simples para transformar reflorestamento em ativos digitais valiosos.
       </Text>
       <View style={styles.stepsContainer}>
@@ -48,12 +53,9 @@ export function ProcessSection() {
 const styles = StyleSheet.create({
   section: {
     padding: 20,
-    backgroundColor: COLORS.primaryLighter,
     alignItems: 'center',
   },
   tag: {
-    backgroundColor: COLORS.primaryLight,
-    color: COLORS.primaryDark,
     fontSize: 14,
     paddingVertical: 6,
     paddingHorizontal: 10,
@@ -65,13 +67,11 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: COLORS.textPrimary,
     textAlign: 'center',
   },
   sectionText: {
     fontSize: 16,
     lineHeight: 20,
-    color: COLORS.textSecondary,
     textAlign: 'center',
     marginBottom: 24,
   },
@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   stepNumberText: {
-    color: COLORS.primaryDark,
     fontSize: 12,
     width: 28,
     height: 28,
@@ -97,18 +96,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 28,
     overflow: 'hidden',
-    backgroundColor: COLORS.primaryLight,
     fontWeight: 'bold',
   },
   stepTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 10,
-    color: COLORS.textPrimary,
   },
   stepText: {
     fontSize: 12,
-    color: COLORS.textSecondary,
     textAlign: 'center',
     marginTop: 10,
   },

@@ -2,6 +2,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthResponse } from '@/types/auth';
 import { LoginData, RegistroData } from '@/utils/validationSchemas';
+import { UpdateProfileData } from '@/utils/validationSchemas';
+import { ChangePasswordData } from '@/utils/validationSchemas';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -81,6 +83,35 @@ export const authService = {
       return response.data;
     } catch (error) {
       return false;
+    }
+  },
+    async updateProfile(data: UpdateProfileData): Promise<AuthResponse> {
+    try {
+      // O token JWT será adicionado automaticamente pelo interceptor
+      const response = await api.put('/Auth/perfil', data);
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.data) {
+        return error.response.data;
+      }
+      return {
+        success: false,
+        message: 'Erro de conexão. Verifique sua internet e tente novamente.',
+      };
+    }
+  },
+    async changePassword(data: ChangePasswordData): Promise<AuthResponse> {
+    try {
+      const response = await api.post('/Auth/alterar-senha', data);
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.data) {
+        return error.response.data;
+      }
+      return {
+        success: false,
+        message: 'Erro de conexão. Verifique sua internet e tente novamente.',
+      };
     }
   },
 };

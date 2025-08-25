@@ -16,9 +16,10 @@ import { useRouter } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAuth } from '@/contexts/AuthContext';
-import { RegistroData, TipoUsuario, TipoPessoa } from '@/types/auth';
-import { registroSchema } from '@/utils/validationSchemas';
+import { useAuth } from '@/contexts/AuthProvider';
+import { TipoUsuario, TipoPessoa } from '@/types/auth';
+import { registroSchema, RegistroData } from '@/utils/validationSchemas';
+import { lightThemeColors as colors } from '@/styles/theme';
 
 export default function RegistroScreen() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function RegistroScreen() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<RegistroData>({
+  } = useForm({ 
     resolver: yupResolver(registroSchema),
     defaultValues: {
       nome: '',
@@ -54,13 +55,10 @@ export default function RegistroScreen() {
     setIsLoading(true);
     try {
       const response = await register(data);
-      
       if (response.success) {
-        Alert.alert('Sucesso', response.message, [
-          { text: 'OK', onPress: () => router.replace('/home') }
-        ]);
+        // A navegação para home já é tratada pelo AuthProvider/SplashScreen
       } else {
-        Alert.alert('Erro', response.message);
+        Alert.alert('Erro no Registro', response.message || 'Não foi possível criar a conta.');
       }
     } catch (error) {
       Alert.alert('Erro', 'Ocorreu um erro inesperado. Tente novamente.');
@@ -69,17 +67,9 @@ export default function RegistroScreen() {
     }
   };
 
-  const formatCPF = (value: string) => {
-    return value.replace(/\D/g, '').slice(0, 11);
-  };
-
-  const formatCNPJ = (value: string) => {
-    return value.replace(/\D/g, '').slice(0, 14);
-  };
-
-  const formatPhone = (value: string) => {
-    return value.replace(/\D/g, '').slice(0, 11);
-  };
+  const formatCPF = (value: string) => value.replace(/\D/g, '').slice(0, 11);
+  const formatCNPJ = (value: string) => value.replace(/\D/g, '').slice(0, 14);
+  const formatPhone = (value: string) => value.replace(/\D/g, '').slice(0, 11);
 
   return (
     <KeyboardAvoidingView
@@ -394,7 +384,7 @@ export default function RegistroScreen() {
 
               <View style={styles.footer}>
                 <Text style={styles.footerText}>Já tem uma conta? </Text>
-                <TouchableOpacity onPress={() => router.push('/login')}>
+                <TouchableOpacity onPress={() => router.push({ pathname: '/login' })}>
                   <Text style={styles.linkText}>Faça login</Text>
                 </TouchableOpacity>
               </View>
@@ -429,19 +419,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.white,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#E8F5E8',
+    color: colors.primaryLighter,
     textAlign: 'center',
   },
   form: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 16,
     padding: 24,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: {
       width: 0,
       height: 4,
@@ -456,12 +446,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
     marginBottom: 6,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.border,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -473,7 +463,7 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.border,
     borderRadius: 8,
     backgroundColor: '#f9f9f9',
   },
@@ -496,7 +486,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 18,
     fontWeight: '600',
   },
@@ -516,4 +506,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

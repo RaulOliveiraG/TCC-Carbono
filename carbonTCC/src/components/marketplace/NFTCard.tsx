@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { COLORS } from '@/constants/colors';
+import { View, Text, StyleSheet } from 'react-native';
+import { useThemeColors } from '@/styles/theme';
 import { Button } from '../common/Button';
 
 export interface NFTCardProps {
@@ -10,17 +10,18 @@ export interface NFTCardProps {
 }
 
 export function NFTCard({ name, price, co2 }: NFTCardProps) {
+  const colors = useThemeColors();
+
   return (
-    <View style={styles.cardContainer}>
-      {/* Placeholder para a imagem do NFT */}
-      <View style={styles.imagePlaceholder} />
+    <View style={[styles.cardContainer, { backgroundColor: colors.card }]}>
+      <View style={[styles.imagePlaceholder, { backgroundColor: colors.border }]} />
 
       <View style={styles.contentContainer}>
-        <Text style={styles.nftName}>{name}</Text>
-        <Text style={styles.co2Text}>{co2} toneladas de CO₂ compensadas</Text>
+        <Text style={[styles.nftName, { color: colors.textPrimary }]}>{name}</Text>
+        <Text style={[styles.co2Text, { color: colors.textSecondary }]}>{co2} toneladas de CO₂ compensadas</Text>
 
         <View style={styles.footer}>
-          <Text style={styles.priceText}>{price}</Text>
+          <Text style={[styles.priceText, { color: colors.primary }]}>{price}</Text>
           <Button title="Comprar" onPress={() => {}} />
         </View>
       </View>
@@ -30,8 +31,7 @@ export function NFTCard({ name, price, co2 }: NFTCardProps) {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: '45%', // Para caber 2 por linha com algum espaço
-    backgroundColor: COLORS.white,
+    width: '45%',
     borderRadius: 10,
     marginBottom: 20,
     shadowColor: '#000',
@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
   },
   imagePlaceholder: {
     height: 150,
-    backgroundColor: COLORS.border,
   },
   contentContainer: {
     padding: 10,
@@ -54,12 +53,10 @@ const styles = StyleSheet.create({
   nftName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: COLORS.textPrimary,
     marginBottom: 5,
   },
   co2Text: {
     fontSize: 12,
-    color: COLORS.textSecondary,
     marginBottom: 10,
   },
   footer: {
@@ -71,6 +68,5 @@ const styles = StyleSheet.create({
   priceText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: COLORS.primary,
   },
 });

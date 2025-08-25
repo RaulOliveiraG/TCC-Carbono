@@ -1,30 +1,49 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { COLORS } from '../../constants/colors';
+import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { useThemeColors } from '@/styles/theme';
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
   variant?: 'primary' | 'outline';
   style?: ViewStyle;
+  // --- INÍCIO DA MODIFICAÇÃO ---
+  disabled?: boolean; // Adicionamos a prop opcional 'disabled'
+  // --- FIM DA MODIFICAÇÃO ---
 }
 
-export function Button({ title, onPress, variant = 'primary', style }: ButtonProps) {
+export function Button({ title, onPress, variant = 'primary', style, disabled = false }: ButtonProps) {
+  const colors = useThemeColors();
+
+  const isPrimary = variant === 'primary';
+
   const containerStyle = [
     styles.button,
-    variant === 'primary' ? styles.primaryContainer : styles.outlineContainer,
+    {
+      backgroundColor: isPrimary ? colors.primary : colors.transparent,
+      borderColor: colors.primary,
+    },
+    // --- INÍCIO DA MODIFICAÇÃO ---
+    // Adicionamos um estilo de opacidade quando o botão está desabilitado
+    disabled && styles.disabled,
+    // --- FIM DA MODIFICAÇÃO ---
     style,
   ];
 
   const textStyle = [
     styles.buttonText,
-    variant === 'primary' ? styles.primaryText : styles.outlineText,
+    {
+      color: isPrimary ? colors.white : colors.primary,
+    },
   ];
 
   return (
-    <TouchableOpacity style={containerStyle} onPress={onPress}>
+    // --- INÍCIO DA MODIFICAÇÃO ---
+    // Passamos a prop 'disabled' para o TouchableOpacity
+    <TouchableOpacity style={containerStyle} onPress={onPress} disabled={disabled}>
       <Text style={textStyle}>{title}</Text>
     </TouchableOpacity>
+    // --- FIM DA MODIFICAÇÃO ---
   );
 }
 
@@ -35,22 +54,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  primaryContainer: {
-    backgroundColor: COLORS.primary,
-  },
-  outlineContainer: {
     borderWidth: 1,
-    borderColor: COLORS.primary,
   },
   buttonText: {
     fontSize: 12,
     fontWeight: '500',
   },
-  primaryText: {
-    color: COLORS.white,
-  },
-  outlineText: {
-    color: COLORS.primary,
+  disabled: {
+    opacity: 0.5,
   },
 });

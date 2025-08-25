@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { COLORS } from '../../constants/colors';
+import { useThemeColors } from '@/styles/theme';
 import { Button } from '../common/Button';
 
 interface SalesCardProps {
@@ -11,19 +11,21 @@ interface SalesCardProps {
 }
 
 export function SalesCard({ nftName, co2Compensated, price }: SalesCardProps) {
+  const colors = useThemeColors();
+
   return (
-    <View style={styles.salesBox}>
+    <View style={[styles.salesBox, { borderColor: colors.primary, backgroundColor: colors.card }]}>
       <LinearGradient
-        colors={[COLORS.transparent, 'rgba(0, 0, 0, 0.2)']}
+        colors={[colors.transparent, 'rgba(0, 0, 0, 0.2)']}
         style={styles.gradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
       />
-      <Text style={styles.benefitItem}>{nftName}</Text>
-      <Text style={styles.benefitItem}>{co2Compensated}</Text>
+      <Text style={[styles.benefitItem, { color: colors.textSecondary }]}>{nftName}</Text>
+      <Text style={[styles.benefitItem, { color: colors.textSecondary }]}>{co2Compensated}</Text>
 
       <View style={styles.buySection}>
-        <Text style={styles.priceLabel}>{price}</Text>
+        <Text style={[styles.priceLabel, { color: colors.textPrimary }]}>{price}</Text>
         <Button title="Comprar" onPress={() => {}} />
       </View>
     </View>
@@ -33,7 +35,6 @@ export function SalesCard({ nftName, co2Compensated, price }: SalesCardProps) {
 const styles = StyleSheet.create({
   salesBox: {
     borderWidth: 1,
-    borderColor: COLORS.primary,
     borderRadius: 10,
     padding: 20,
     marginTop: 20,
@@ -50,7 +51,6 @@ const styles = StyleSheet.create({
   },
   benefitItem: {
     fontSize: 14,
-    color: COLORS.textSecondary,
     marginVertical: 3,
   },
   buySection: {
@@ -62,6 +62,5 @@ const styles = StyleSheet.create({
   priceLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: COLORS.textPrimary,
   },
 });

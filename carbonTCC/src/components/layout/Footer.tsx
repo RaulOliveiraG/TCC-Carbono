@@ -1,57 +1,51 @@
 import React from 'react';
-// --- INÍCIO DA MODIFICAÇÃO ---
 import { Image, StyleSheet, Text, View, TouchableOpacity, Linking, Alert } from 'react-native';
+// --- INÍCIO DA MODIFICAÇÃO ---
+import { useThemeColors } from '@/styles/theme';
 // --- FIM DA MODIFICAÇÃO ---
-import { COLORS } from '@/constants/colors';
 
 export function Footer() {
   // --- INÍCIO DA MODIFICAÇÃO ---
+  const colors = useThemeColors();
+  // --- FIM DA MODIFICAÇÃO ---
+
   const handleContactPress = async () => {
     const email = 'rauloliveiragarcia08@gmail.com';
     const url = `mailto:${email}`;
 
     try {
-      // Verifica se o dispositivo pode abrir o link 'mailto:'
       const canOpen = await Linking.canOpenURL(url);
-
       if (canOpen) {
         await Linking.openURL(url);
       } else {
-        // Se não houver um app de e-mail, informa o usuário.
-        Alert.alert(
-          'Não foi possível abrir',
-          'Nenhum aplicativo de e-mail encontrado para completar esta ação.'
-        );
+        Alert.alert('Não foi possível abrir', 'Nenhum aplicativo de e-mail encontrado.');
       }
     } catch (error) {
       Alert.alert('Erro', 'Ocorreu um erro ao tentar abrir o aplicativo de e-mail.');
     }
   };
-  // --- FIM DA MODIFICAÇÃO ---
 
   return (
-    <View style={styles.footer}>
+    <View style={[styles.footer, { backgroundColor: colors.card, borderTopColor: colors.border }]}>
       <View>
         <Image
           source={require('../../assets/images/logoText.png')}
           style={styles.logo}
           resizeMode="contain"
         />
-        <Text style={[styles.copyright, { marginTop: 5 }]}>© 2025 Carbon NFT.</Text>
-        <Text style={styles.copyright}>Todos os direitos reservados.</Text>
+        <Text style={[styles.copyright, { color: colors.textSecondary, marginTop: 5 }]}>© 2025 Carbon NFT.</Text>
+        <Text style={[styles.copyright, { color: colors.textSecondary }]}>Todos os direitos reservados.</Text>
       </View>
 
       <View style={styles.footerColumn}>
         <TouchableOpacity>
-          <Text style={styles.footerLink}>Termos de uso</Text>
+          <Text style={[styles.footerLink, { color: colors.textSecondary }]}>Termos de uso</Text>
         </TouchableOpacity>
-        {/* --- INÍCIO DA MODIFICAÇÃO --- */}
         <TouchableOpacity onPress={handleContactPress}>
-          <Text style={styles.footerLink}>Contato</Text>
+          <Text style={[styles.footerLink, { color: colors.textSecondary }]}>Contato</Text>
         </TouchableOpacity>
-        {/* --- FIM DA MODIFICAÇÃO --- */}
         <TouchableOpacity>
-          <Text style={styles.footerLink}>Política de Privacidade</Text>
+          <Text style={[styles.footerLink, { color: colors.textSecondary }]}>Política de Privacidade</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -62,11 +56,9 @@ const styles = StyleSheet.create({
   footer: {
     padding: 20,
     borderTopWidth: 1,
-    borderTopColor: COLORS.border,
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 40,
-    backgroundColor: COLORS.background,
   },
   logo: {
     width: 120,
@@ -79,11 +71,9 @@ const styles = StyleSheet.create({
   },
   footerLink: {
     fontSize: 12,
-    color: COLORS.textSecondary,
     marginBottom: 12,
   },
   copyright: {
     fontSize: 12,
-    color: COLORS.textSecondary,
   },
 });
