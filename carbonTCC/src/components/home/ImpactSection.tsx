@@ -1,14 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useThemeColors } from '@/styles/theme';
+import { PriceChart } from './PriceChart'; // Importamos o novo componente de gráfico
 
 const impactData = [
   { value: '500K+', label: 'Árvores Plantadas' },
   { value: '25K+', label: 'NFTs Criados' },
   { value: '10K+', label: 'Toneladas de CO₂' },
-  { value: '15+', label: 'Projetos Apoiados' },
+  { value: '15+', label: 'Hectares Reflorestados' },
 ];
 
+// O subcomponente agora recebe as cores como prop para evitar chamar o hook múltiplas vezes
 const ImpactStat = ({ value, label, colors }: { value: string; label: string; colors: ReturnType<typeof useThemeColors> }) => (
   <View style={styles.impactItem}>
     <Text style={[styles.impactNumber, { color: colors.white }]}>{value}</Text>
@@ -28,11 +30,17 @@ export function ImpactSection() {
       </Text>
       <View style={styles.impactContainer}>
         {impactData.map(item => (
+          // Passamos o objeto de cores para o filho
           <ImpactStat key={item.label} value={item.value} label={item.label} colors={colors} />
         ))}
       </View>
-      <Image source={require('../../assets/images/grafico.png')} style={styles.impactImage} />
-      <Text style={[styles.sectionText, { color: colors.textLight }]}>
+      
+      {/* --- INÍCIO DA MODIFICAÇÃO --- */}
+      {/* Substituímos a imagem estática pelo nosso componente de gráfico dinâmico */}
+      <PriceChart />
+      {/* --- FIM DA MODIFICAÇÃO --- */}
+
+      <Text style={[styles.sectionText, { color: colors.textLight, marginTop: 16 }]}>
         Comece hoje mesmo a investir em NFTs com propósito e ajude a construir um futuro mais sustentável.
       </Text>
     </View>
@@ -82,10 +90,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
   },
-  impactImage: {
-    width: '100%',
-    height: 170,
-    borderRadius: 5,
-    marginBottom: 30,
-  },
+  // O estilo impactImage foi removido pois não é mais necessário
 });
