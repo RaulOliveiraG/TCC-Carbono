@@ -42,7 +42,6 @@ export default function EsqueciSenhaScreen() {
       if (response.success) {
         setIsSuccess(true);
       } else {
-        // Embora nosso backend sempre retorne sucesso, tratamos o caso de falha por robustez
         Alert.alert('Erro', response.message || 'Não foi possível processar sua solicitação.');
       }
     } catch (error) {

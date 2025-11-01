@@ -7,9 +7,7 @@ interface ButtonProps {
   onPress: () => void;
   variant?: 'primary' | 'outline';
   style?: ViewStyle;
-  // --- INÍCIO DA MODIFICAÇÃO ---
-  disabled?: boolean; // Adicionamos a prop opcional 'disabled'
-  // --- FIM DA MODIFICAÇÃO ---
+  disabled?: boolean; 
 }
 
 export function Button({ title, onPress, variant = 'primary', style, disabled = false }: ButtonProps) {
@@ -23,10 +21,7 @@ export function Button({ title, onPress, variant = 'primary', style, disabled = 
       backgroundColor: isPrimary ? colors.primary : colors.transparent,
       borderColor: colors.primary,
     },
-    // --- INÍCIO DA MODIFICAÇÃO ---
-    // Adicionamos um estilo de opacidade quando o botão está desabilitado
     disabled && styles.disabled,
-    // --- FIM DA MODIFICAÇÃO ---
     style,
   ];
 
@@ -38,12 +33,9 @@ export function Button({ title, onPress, variant = 'primary', style, disabled = 
   ];
 
   return (
-    // --- INÍCIO DA MODIFICAÇÃO ---
-    // Passamos a prop 'disabled' para o TouchableOpacity
     <TouchableOpacity style={containerStyle} onPress={onPress} disabled={disabled}>
       <Text style={textStyle}>{title}</Text>
     </TouchableOpacity>
-    // --- FIM DA MODIFICAÇÃO ---
   );
 }
 

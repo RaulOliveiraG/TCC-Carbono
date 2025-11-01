@@ -102,9 +102,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     logout,
     isAuthenticated,
-    // --- INÍCIO DA MODIFICAÇÃO ---
-    setUser, // Expondo a função setUser no valor do contexto
-    // --- FIM DA MODIFICAÇÃO ---
+    setUser, 
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

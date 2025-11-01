@@ -40,7 +40,7 @@ export function ChangePasswordModal({ visible, onClose }: ChangePasswordModalPro
   };
 
   const handleClose = () => {
-    reset(); // Limpa o formulário ao fechar
+    reset();
     onClose();
   };
 

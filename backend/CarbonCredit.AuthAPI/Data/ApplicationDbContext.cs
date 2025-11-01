@@ -28,17 +28,12 @@ namespace CarbonCredit.AuthAPI.Data
                 entity.Property(e => e.StatusConta).HasConversion<string>();
                 entity.Property(e => e.TipoPessoa).HasConversion<string>();
 
-                // --- INÍCIO DA MODIFICAÇÃO ---
-                // Usar a função nativa do PostgreSQL para o valor padrão de data/hora
                 entity.Property(e => e.DataCriacao)
                     .HasDefaultValueSql("now() at time zone 'utc'");
 
                 entity.Property(e => e.DataAtualizacao)
                     .HasDefaultValueSql("now() at time zone 'utc'");
-                // --- FIM DA MODIFICAÇÃO ---
             });
-
-            // A CHECK CONSTRAINT foi removida daqui.
         }
 
         public override int SaveChanges()

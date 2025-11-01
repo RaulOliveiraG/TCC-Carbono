@@ -1,9 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-// --- INÍCIO DA MODIFICAÇÃO ---
-// Corrigimos a importação. A sintaxe correta é a importação padrão.
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// --- FIM DA MODIFICAÇÃO ---
 import { Appearance } from 'react-native';
 
 type Theme = 'light' | 'dark';

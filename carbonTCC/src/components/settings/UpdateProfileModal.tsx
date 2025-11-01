@@ -47,7 +47,7 @@ export function UpdateProfileModal({ visible, onClose }: UpdateProfileModalProps
   };
 
   const handleClose = () => {
-    reset({ nome: user?.nome, telefone: user?.telefone }); // Reseta para os valores atuais
+    reset({ nome: user?.nome, telefone: user?.telefone });
     onClose();
   };
 
@@ -103,7 +103,6 @@ export function UpdateProfileModal({ visible, onClose }: UpdateProfileModalProps
   );
 }
 
-// Estilos são muito similares aos do ChangePasswordModal
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,

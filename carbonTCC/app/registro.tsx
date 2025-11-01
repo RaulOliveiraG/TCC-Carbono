@@ -56,7 +56,6 @@ export default function RegistroScreen() {
     try {
       const response = await register(data);
       if (response.success) {
-        // A navegação para home já é tratada pelo AuthProvider/SplashScreen
       } else {
         Alert.alert('Erro no Registro', response.message || 'Não foi possível criar a conta.');
       }
@@ -88,7 +87,6 @@ export default function RegistroScreen() {
             </View>
 
             <View style={styles.form}>
-              {/* Nome */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Nome *</Text>
                 <Controller
@@ -110,7 +108,6 @@ export default function RegistroScreen() {
                 )}
               </View>
 
-              {/* Email */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Email *</Text>
                 <Controller
@@ -135,7 +132,6 @@ export default function RegistroScreen() {
                 )}
               </View>
 
-              {/* Senha */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Senha *</Text>
                 <Controller
@@ -158,7 +154,6 @@ export default function RegistroScreen() {
                 )}
               </View>
 
-              {/* Confirmação de Senha */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Confirmar Senha *</Text>
                 <Controller
@@ -181,7 +176,6 @@ export default function RegistroScreen() {
                 )}
               </View>
 
-              {/* Tipo de Usuário */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Tipo de Usuário *</Text>
                 <Controller
@@ -203,7 +197,6 @@ export default function RegistroScreen() {
                 />
               </View>
 
-              {/* Tipo de Pessoa */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Tipo de Pessoa *</Text>
                 <Controller
@@ -224,7 +217,6 @@ export default function RegistroScreen() {
                 />
               </View>
 
-              {/* CPF - apenas para pessoa física */}
               {tipoPessoa === TipoPessoa.FISICA && (
                 <View style={styles.inputContainer}>
                   <Text style={styles.label}>CPF *</Text>
@@ -250,7 +242,6 @@ export default function RegistroScreen() {
                 </View>
               )}
 
-              {/* CNPJ - apenas para pessoa jurídica */}
               {tipoPessoa === TipoPessoa.JURIDICA && (
                 <>
                   <View style={styles.inputContainer}>
@@ -299,7 +290,6 @@ export default function RegistroScreen() {
                 </>
               )}
 
-              {/* Telefone */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Telefone</Text>
                 <Controller
@@ -322,7 +312,6 @@ export default function RegistroScreen() {
                 )}
               </View>
 
-              {/* Data de Nascimento - apenas para pessoa física */}
               {tipoPessoa === TipoPessoa.FISICA && (
                 <View style={styles.inputContainer}>
                   <Text style={styles.label}>Data de Nascimento</Text>
@@ -346,7 +335,6 @@ export default function RegistroScreen() {
                 </View>
               )}
 
-              {/* Endereço da Carteira Blockchain */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Endereço da Carteira Blockchain</Text>
                 <Controller

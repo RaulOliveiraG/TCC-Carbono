@@ -10,24 +10,18 @@ export function PriceChart() {
   const colors = useThemeColors();
   const [data, setData] = useState<PriceDataPoint[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  // --- INÍCIO DA MODIFICAÇÃO ---
-  const [error, setError] = useState<string | null>(null); // Novo estado para erro
-  // --- FIM DA MODIFICAÇÃO ---
+  const [error, setError] = useState<string | null>(null); 
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Resetamos o erro e iniciamos o loading
         setError(null);
         setIsLoading(true);
         const priceHistory = await fetchCarbonPriceHistory();
         setData(priceHistory);
       } catch (err) {
         console.error("Failed to fetch price history:", err);
-        // --- INÍCIO DA MODIFICAÇÃO ---
-        // Definimos a mensagem de erro no estado
         setError("Não foi possível carregar os dados do gráfico.");
-        // --- FIM DA MODIFICAÇÃO ---
       } finally {
         setIsLoading(false);
       }
@@ -42,9 +36,6 @@ export function PriceChart() {
       </View>
     );
   }
-
-  // --- INÍCIO DA MODIFICAÇÃO ---
-  // Se houver um erro, mostramos a mensagem de erro
   if (error) {
     return (
       <View style={styles.loaderContainer}>
@@ -52,10 +43,8 @@ export function PriceChart() {
       </View>
     );
   }
-  // --- FIM DA MODIFICAÇÃO ---
 
   if (!data) {
-    // Este estado agora cobre o caso de não haver erro, mas os dados serem nulos
     return (
       <View style={styles.loaderContainer}>
         <Text style={{ color: colors.textSecondary }}>Nenhum dado disponível.</Text>
@@ -121,7 +110,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   loaderContainer: {
-    height: 258, // Altura total do gráfico + título + padding
+    height: 258, 
     justifyContent: 'center',
     alignItems: 'center',
   },

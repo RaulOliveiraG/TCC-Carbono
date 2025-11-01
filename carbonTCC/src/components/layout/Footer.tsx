@@ -1,13 +1,9 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity, Linking, Alert } from 'react-native';
-// --- INÍCIO DA MODIFICAÇÃO ---
 import { useThemeColors } from '@/styles/theme';
-// --- FIM DA MODIFICAÇÃO ---
 
 export function Footer() {
-  // --- INÍCIO DA MODIFICAÇÃO ---
   const colors = useThemeColors();
-  // --- FIM DA MODIFICAÇÃO ---
 
   const handleContactPress = async () => {
     const email = 'rauloliveiragarcia08@gmail.com';

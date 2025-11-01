@@ -3,10 +3,7 @@ import { LoginData, RegistroData } from "@/utils/validationSchemas";
 export enum TipoUsuario {
   INVESTIDOR = 'INVESTIDOR',
   EMPRESA_COMPRADORA = 'EMPRESA_COMPRADORA',
-  // --- INÍCIO DA MODIFICAÇÃO ---
-  // Corrigimos o erro de digitação de 'PROPRIETario_TERRA' para 'PROPRIETARIO_TERRA'
   PROPRIETARIO_TERRA = 'PROPRIETARIO_TERRA',
-  // --- FIM DA MODIFICAÇÃO ---
   ADMIN = 'ADMIN'
 }
 

@@ -5,17 +5,15 @@ import { Header } from '@/components/layout/Header';
 import { useThemeStore } from '@/stores/themeStore';
 import { useThemeColors } from '@/styles/theme';
 import { ChangePasswordModal } from '@/components/settings/ChangePasswordModal';
-import { UpdateProfileModal } from '@/components/settings/UpdateProfileModal'; // Importamos o novo modal
+import { UpdateProfileModal } from '@/components/settings/UpdateProfileModal'; 
 
 export default function SettingsScreen() {
   const { theme, toggleTheme } = useThemeStore();
   const colors = useThemeColors();
   const isDarkTheme = theme === 'dark';
 
-  // --- INÍCIO DA MODIFICAÇÃO ---
   const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
   const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
-  // --- FIM DA MODIFICAÇÃO ---
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -27,27 +25,23 @@ export default function SettingsScreen() {
           <Text style={[styles.title, { color: colors.textPrimary }]}>Configurações</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Gerencie seu perfil e preferências.</Text>
         </View>
-
-        {/* --- INÍCIO DA MODIFICAÇÃO --- */}
-        {/* A seção de Perfil agora é apenas uma lista de links */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Perfil</Text>
           <TouchableOpacity 
             style={[styles.row, { borderBottomColor: colors.border }]}
-            onPress={() => setIsProfileModalVisible(true)} // Abre o modal de perfil
+            onPress={() => setIsProfileModalVisible(true)} 
           >
             <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>Alterar Nome e Telefone</Text>
             <Text style={[styles.arrow, { color: colors.textSecondary }]}>›</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.row, { borderBottomColor: colors.border }]}
-            onPress={() => setIsPasswordModalVisible(true)} // Abre o modal de senha
+            onPress={() => setIsPasswordModalVisible(true)} 
           >
             <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>Alterar Senha</Text>
             <Text style={[styles.arrow, { color: colors.textSecondary }]}>›</Text>
           </TouchableOpacity>
         </View>
-        {/* --- FIM DA MODIFICAÇÃO --- */}
 
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Aparência</Text>
@@ -63,7 +57,6 @@ export default function SettingsScreen() {
         </View>
       </ScrollView>
 
-      {/* Renderizamos os dois modais aqui */}
       <UpdateProfileModal 
         visible={isProfileModalVisible}
         onClose={() => setIsProfileModalVisible(false)}

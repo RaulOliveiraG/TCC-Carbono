@@ -72,13 +72,11 @@ namespace CarbonCredit.AuthAPI.Services
                     return new AuthResponseDto { Success = false, Message = "Usuário não encontrado." };
                 }
 
-                // 1. Verificar se a senha atual fornecida está correta
                 if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.SenhaAtual, usuario.Senha))
                 {
                     return new AuthResponseDto { Success = false, Message = "Senha atual incorreta." };
                 }
 
-                // 2. Hashear e atualizar para a nova senha
                 usuario.Senha = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NovaSenha);
 
                 _context.Usuarios.Update(usuario);
@@ -113,8 +111,6 @@ namespace CarbonCredit.AuthAPI.Services
 
                 usuario.Nome = updateDto.Nome;
                 usuario.Telefone = updateDto.Telefone;
-                // A data de atualização será tratada pelo SaveChangesAsync do DbContext
-
                 _context.Usuarios.Update(usuario);
                 await _context.SaveChangesAsync();
 
@@ -151,7 +147,7 @@ namespace CarbonCredit.AuthAPI.Services
                 var token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
 
                 usuario.SenhaResetToken = token;
-                usuario.SenhaResetTokenExpiraEm = DateTime.UtcNow.AddHours(1); // Token válido por 1 hora
+                usuario.SenhaResetTokenExpiraEm = DateTime.UtcNow.AddHours(1); 
 
                 await _context.SaveChangesAsync();
 
@@ -177,7 +173,6 @@ namespace CarbonCredit.AuthAPI.Services
         {
             try
             {
-                // Verificar se o usuário já existe
                 if (await UsuarioExisteAsync(registroDto.Email))
                 {
                     return new AuthResponseDto
@@ -314,7 +309,6 @@ namespace CarbonCredit.AuthAPI.Services
                     };
                 }
 
-                // Atualizar último login
                 usuario.UltimoLogin = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
 

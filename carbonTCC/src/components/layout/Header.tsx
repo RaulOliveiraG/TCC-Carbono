@@ -121,16 +121,14 @@ export function Header({ onHowItWorksPress }: HeaderProps) {
   return (
     <View style={[styles.header, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
       <TouchableOpacity onPress={() => router.push({ pathname: '/home' })}>
-        {/* --- INÍCIO DA MODIFICAÇÃO --- */}
         <View style={styles.logoContainer}>
           <Image
-            source={require('../../assets/images/logo.png')} // Usando a imagem do logo sem texto
+            source={require('../../assets/images/logo.png')}
             style={styles.logoImage}
             resizeMode="contain"
           />
           <Text style={[styles.logoText, { color: colors.textPrimary }]}>CarbonNFT</Text>
         </View>
-        {/* --- FIM DA MODIFICAÇÃO --- */}
       </TouchableOpacity>
 
       {isMobile ? (
