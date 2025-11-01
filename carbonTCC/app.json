@@ -22,7 +22,8 @@
         "foregroundImage": "./src/assets/images/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "usesCleartextTraffic": true
+      "usesCleartextTraffic": true,
+      "package": "com.rauloliveirag.carbonnftapp"
     },
     "web": {
       "favicon": "./src/assets/images/logo.png"
@@ -33,6 +34,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "2309f3ad-ab89-405f-a228-2c910895d5e8"
+      }
     }
   }
 }

@@ -10,5 +10,7 @@ namespace CarbonCredit.AuthAPI.Services
         string GerarTokenJwt(UsuarioDto usuario);
         Task<AuthResponseDto> UpdateUsuarioAsync(int userId, UpdateUsuarioDto updateDto);
         Task<AuthResponseDto> ChangePasswordAsync(int userId, ChangePasswordDto changePasswordDto);
+        Task<AuthResponseDto> SolicitarRecuperacaoSenhaAsync(string email);
+        Task<AuthResponseDto> RedefinirSenhaAsync(RedefinirSenhaDto redefinirSenhaDto);
     }
 }

@@ -11,9 +11,7 @@ export interface ThemeColors {
   
   textPrimary: string;
   textSecondary: string;
-  // --- INÍCIO DA MODIFICAÇÃO ---
-  textLight: string; // Adicionamos a chave que faltava
-  // --- FIM DA MODIFICAÇÃO ---
+  textLight: string; 
   
   border: string;
   white: string;
@@ -30,9 +28,7 @@ const lightColors: ThemeColors = {
   card: '#FFFFFF',
   textPrimary: '#1F2937',
   textSecondary: '#6B7280',
-  // --- INÍCIO DA MODIFICAÇÃO ---
-  textLight: '#D1FAE5', // Definimos o valor para o tema claro
-  // --- FIM DA MODIFICAÇÃO ---
+  textLight: '#D1FAE5', 
   border: '#E5E7EB',
   white: '#FFFFFF',
   black: '#000000',
@@ -48,9 +44,7 @@ const darkColors: ThemeColors = {
   card: '#1F2937',
   textPrimary: '#F9FAFB',
   textSecondary: '#9CA3AF',
-  // --- INÍCIO DA MODIFICAÇÃO ---
-  textLight: '#D1FAE5', // Definimos o valor para o tema escuro (pode ser o mesmo ou diferente)
-  // --- FIM DA MODIFICAÇÃO ---
+  textLight: '#D1FAE5',
   border: '#374151',
   white: '#FFFFFF',
   black: '#000000',

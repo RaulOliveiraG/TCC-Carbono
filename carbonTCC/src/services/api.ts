@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthResponse } from '@/types/auth';
-import { LoginData, RegistroData } from '@/utils/validationSchemas';
+import { LoginData, RegistroData, EsqueciSenhaData, RedefinirSenhaData } from '@/utils/validationSchemas';
 import { UpdateProfileData } from '@/utils/validationSchemas';
 import { ChangePasswordData } from '@/utils/validationSchemas';
 
@@ -19,7 +19,6 @@ const api = axios.create({
   },
 });
 
-// Interceptor para adicionar o token de autenticação
 api.interceptors.request.use(
   async (config) => {
     const token = await AsyncStorage.getItem('auth_token');
@@ -33,14 +32,11 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor para tratar respostas
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      // Token expirado ou inválido, limpar storage
       await AsyncStorage.multiRemove(['auth_token', 'user_data']);
-      // Opcional: redirecionar para a tela de login
     }
     return Promise.reject(error);
   }
@@ -49,7 +45,7 @@ api.interceptors.response.use(
 export const authService = {
   async login(data: LoginData): Promise<AuthResponse> {
     try {
-      const response = await api.post('/Auth/login', data); // Caminho ajustado para corresponder ao backend
+      const response = await api.post('/Auth/login', data);
       return response.data;
     } catch (error: any) {
       if (error.response?.data) {
@@ -64,7 +60,7 @@ export const authService = {
 
   async register(data: RegistroData): Promise<AuthResponse> {
     try {
-      const response = await api.post('/Auth/registro', data); // Caminho ajustado para corresponder ao backend
+      const response = await api.post('/Auth/registro', data);
       return response.data;
     } catch (error: any) {
       if (error.response?.data) {
@@ -77,9 +73,24 @@ export const authService = {
     }
   },
 
+  async solicitarRecuperacaoSenha(data: EsqueciSenhaData): Promise<AuthResponse> {
+    try {
+      const response = await api.post('/Auth/solicitar-recuperacao', data);
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.data) {
+        return error.response.data;
+      }
+      return {
+        success: false,
+        message: 'Erro de conexão. Verifique sua internet e tente novamente.',
+      };
+    }
+  },
+
   async checkUserExists(email: string): Promise<boolean> {
     try {
-      const response = await api.get(`/Auth/usuario-existe?email=${encodeURIComponent(email)}`); // Caminho ajustado
+      const response = await api.get(`/Auth/usuario-existe?email=${encodeURIComponent(email)}`);
       return response.data;
     } catch (error) {
       return false;
@@ -87,8 +98,21 @@ export const authService = {
   },
     async updateProfile(data: UpdateProfileData): Promise<AuthResponse> {
     try {
-      // O token JWT será adicionado automaticamente pelo interceptor
       const response = await api.put('/Auth/perfil', data);
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.data) {
+        return error.response.data;
+      }
+      return {
+        success: false,
+        message: 'Erro de conexão. Verifique sua internet e tente novamente.',
+      };
+    }
+  },
+    async redefinirSenha(data: RedefinirSenhaData): Promise<AuthResponse> {
+    try {
+      const response = await api.post('/Auth/redefinir-senha', data);
       return response.data;
     } catch (error: any) {
       if (error.response?.data) {

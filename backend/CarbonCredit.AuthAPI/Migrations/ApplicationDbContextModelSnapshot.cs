@@ -84,6 +84,14 @@ namespace CarbonCredit.AuthAPI.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<string>("SenhaResetToken")
+                        .HasColumnType("text")
+                        .HasColumnName("senha_reset_token");
+
+                    b.Property<DateTime?>("SenhaResetTokenExpiraEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("senha_reset_token_expira_em");
+
                     b.Property<string>("StatusConta")
                         .IsRequired()
                         .HasColumnType("text")

@@ -18,6 +18,29 @@ namespace CarbonCredit.AuthAPI.Controllers
         }
 
         /// <summary>
+        /// Inicia o fluxo de recuperação de senha para um usuário.
+        /// </summary>
+        /// <param name="solicitacaoDto">O DTO contendo o email do usuário.</param>
+        /// <returns>Uma resposta indicando que o processo foi iniciado.</returns>
+        [HttpPost("solicitar-recuperacao")]
+        public async Task<ActionResult<AuthResponseDto>> SolicitarRecuperacao([FromBody] SolicitarRecuperacaoDto solicitacaoDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new AuthResponseDto { Success = false, Message = "Formato de e-mail inválido." });
+            }
+
+            var resultado = await _authService.SolicitarRecuperacaoSenhaAsync(solicitacaoDto.Email);
+
+            if (!resultado.Success)
+            {
+                return StatusCode(500, new AuthResponseDto { Success = false, Message = "Ocorreu um erro ao processar sua solicitação." });
+            }
+
+            return Ok(resultado);
+        }
+
+        /// <summary>
         /// Altera a senha do usuário autenticado.
         /// </summary>
         /// <param name="changePasswordDto">Dados para alteração de senha.</param>
@@ -141,6 +164,29 @@ namespace CarbonCredit.AuthAPI.Controllers
             }
 
             return Unauthorized(resultado);
+        }
+
+        /// <summary>
+        /// Redefine a senha do usuário usando um token de recuperação.
+        /// </summary>
+        /// <param name="redefinirSenhaDto">Dados para redefinição de senha.</param>
+        /// <returns>Resposta da operação de redefinição.</returns>
+        [HttpPost("redefinir-senha")]
+        public async Task<ActionResult<AuthResponseDto>> RedefinirSenha([FromBody] RedefinirSenhaDto redefinirSenhaDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new AuthResponseDto { Success = false, Message = "Dados inválidos." });
+            }
+
+            var resultado = await _authService.RedefinirSenhaAsync(redefinirSenhaDto);
+
+            if (resultado.Success)
+            {
+                return Ok(resultado);
+            }
+
+            return BadRequest(resultado);
         }
 
         /// <summary>

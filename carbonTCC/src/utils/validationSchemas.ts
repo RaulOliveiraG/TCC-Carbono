@@ -1,5 +1,26 @@
 import * as yup from 'yup';
 import { TipoUsuario, TipoPessoa } from '../types/auth';
+
+export const redefinirSenhaSchema = yup.object({
+  token: yup
+    .string()
+    .required('O token é obrigatório.'),
+  email: yup
+    .string()
+    .email('Email deve ter um formato válido')
+    .required('Email é obrigatório'),
+  novaSenha: yup
+    .string()
+    .required('Nova senha é obrigatória')
+    .min(6, 'Nova senha deve ter no mínimo 6 caracteres'),
+  confirmacaoNovaSenha: yup
+    .string()
+    .required('Confirmação de senha é obrigatória')
+    .oneOf([yup.ref('novaSenha')], 'As senhas não coincidem'),
+}).required();
+
+export type RedefinirSenhaData = yup.InferType<typeof redefinirSenhaSchema>;
+
 export const loginSchema = yup.object({
   email: yup
     .string()
@@ -8,9 +29,8 @@ export const loginSchema = yup.object({
   senha: yup
     .string()
     .required('Senha é obrigatória'),
-}).required(); // Adiciona .required() no objeto para garantir que não seja undefined
+}).required();
 
-// Gera e exporta o tipo LoginData diretamente do schema
 export type LoginData = yup.InferType<typeof loginSchema>;
 
 export const changePasswordSchema = yup.object({
@@ -42,7 +62,6 @@ export const updateProfileSchema = yup.object({
 
 export type UpdateProfileData = yup.InferType<typeof updateProfileSchema>;
 
-// Schema de Registro
 export const registroSchema = yup.object({
   nome: yup
     .string()
@@ -121,14 +140,19 @@ export const registroSchema = yup.object({
 }).required();
 
 export type RegistroData = yup.InferType<typeof registroSchema>;
-// Função para validar CPF
+
+export const esqueciSenhaSchema = yup.object({
+  email: yup
+    .string()
+    .email('Email deve ter um formato válido')
+    .required('Email é obrigatório'),
+}).required();
+
+export type EsqueciSenhaData = yup.InferType<typeof esqueciSenhaSchema>;
+
 export const validarCPF = (cpf: string): boolean => {
   if (!cpf || cpf.length !== 11) return false;
-  
-  // Verifica se todos os dígitos são iguais
   if (/^(\d)\1{10}$/.test(cpf)) return false;
-  
-  // Validação do primeiro dígito verificador
   let soma = 0;
   for (let i = 0; i < 9; i++) {
     soma += parseInt(cpf.charAt(i)) * (10 - i);
@@ -136,8 +160,6 @@ export const validarCPF = (cpf: string): boolean => {
   let resto = 11 - (soma % 11);
   if (resto === 10 || resto === 11) resto = 0;
   if (resto !== parseInt(cpf.charAt(9))) return false;
-  
-  // Validação do segundo dígito verificador
   soma = 0;
   for (let i = 0; i < 10; i++) {
     soma += parseInt(cpf.charAt(i)) * (11 - i);
@@ -145,46 +167,32 @@ export const validarCPF = (cpf: string): boolean => {
   resto = 11 - (soma % 11);
   if (resto === 10 || resto === 11) resto = 0;
   if (resto !== parseInt(cpf.charAt(10))) return false;
-  
   return true;
 };
 
-// Função para validar CNPJ
 export const validarCNPJ = (cnpj: string): boolean => {
   if (!cnpj || cnpj.length !== 14) return false;
-  
-  // Verifica se todos os dígitos são iguais
   if (/^(\d)\1{13}$/.test(cnpj)) return false;
-  
-  // Validação do primeiro dígito verificador
   let tamanho = cnpj.length - 2;
   let numeros = cnpj.substring(0, tamanho);
   let digitos = cnpj.substring(tamanho);
   let soma = 0;
   let pos = tamanho - 7;
-  
   for (let i = tamanho; i >= 1; i--) {
     soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
     if (pos < 2) pos = 9;
   }
-  
   let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
   if (resultado !== parseInt(digitos.charAt(0))) return false;
-  
-  // Validação do segundo dígito verificador
   tamanho = tamanho + 1;
   numeros = cnpj.substring(0, tamanho);
   soma = 0;
   pos = tamanho - 7;
-  
   for (let i = tamanho; i >= 1; i--) {
     soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
     if (pos < 2) pos = 9;
   }
-  
   resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
   if (resultado !== parseInt(digitos.charAt(1))) return false;
-  
   return true;
 };
-

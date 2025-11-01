@@ -88,6 +88,12 @@ namespace CarbonCredit.AuthAPI.Models
 
         [Column("data_atualizacao")]
         public DateTime DataAtualizacao { get; set; } = DateTime.UtcNow;
+
+        [Column("senha_reset_token")]
+        public string? SenhaResetToken { get; set; }
+
+        [Column("senha_reset_token_expira_em")]
+        public DateTime? SenhaResetTokenExpiraEm { get; set; }
+
     }
 }
-

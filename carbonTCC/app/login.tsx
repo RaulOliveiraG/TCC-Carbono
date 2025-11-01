@@ -17,10 +17,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '@/contexts/AuthProvider';
 import { loginSchema, LoginData } from '@/utils/validationSchemas';
-// --- INÍCIO DA MODIFICAÇÃO ---
-// Importamos as cores estáticas do tema claro
 import { lightThemeColors as colors } from '@/styles/theme';
-// --- FIM DA MODIFICAÇÃO ---
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -44,7 +41,6 @@ export default function LoginScreen() {
     try {
       const response = await login(data);
       if (response.success) {
-        // A navegação para home já é tratada pelo AuthProvider/SplashScreen
       } else {
         Alert.alert('Erro de Login', response.message || 'Credenciais inválidas.');
       }
@@ -119,6 +115,13 @@ export default function LoginScreen() {
               </View>
 
               <TouchableOpacity
+                style={styles.forgotPasswordContainer}
+                onPress={() => router.push({ pathname: '/esqueci-senha' })}
+              >
+                <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 style={[styles.button, isLoading && styles.buttonDisabled]}
                 onPress={handleSubmit(onSubmit)}
                 disabled={isLoading}
@@ -144,7 +147,6 @@ export default function LoginScreen() {
   );
 }
 
-// Estilos estáticos para o tema claro
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -214,12 +216,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 4,
   },
+  forgotPasswordContainer: {
+    alignSelf: 'flex-end',
+    marginBottom: 24,
+  },
+  forgotPasswordText: {
+    fontSize: 14,
+    color: '#2E7D32',
+    fontWeight: '500',
+  },
   button: {
     backgroundColor: '#2E7D32',
     borderRadius: 8,
     paddingVertical: 16,
     alignItems: 'center',
-    marginTop: 8,
   },
   buttonDisabled: {
     opacity: 0.6,

@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CarbonCredit.AuthAPI.Data;
 using CarbonCredit.AuthAPI.Services;
+using CarbonCredit.AuthAPI.Services.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddScoped<IEmailService, SendGridEmailService>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -69,8 +72,5 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-// A lógica de EnsureCreated() será substituída pelo comando de migration
-// então não precisamos mais dela aqui.
 
 app.Run();
