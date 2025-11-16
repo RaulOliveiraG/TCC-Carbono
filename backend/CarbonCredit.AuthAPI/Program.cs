@@ -19,12 +19,14 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString, npgsqlOptionsAction: sqlOptions =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), npgsqlOptions =>
     {
-        sqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 5, 
-            maxRetryDelay: TimeSpan.FromSeconds(30),
-            errorCodesToAdd: null);
+        npgsqlOptions.CommandTimeout(60);
+
+        npgsqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 10,
+            maxRetryDelay: TimeSpan.FromSeconds(30), 
+            errorCodesToAdd: null); 
     }));
 
 
