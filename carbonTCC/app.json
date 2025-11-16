@@ -22,6 +22,9 @@
         "foregroundImage": "./src/assets/images/logo.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions": [
+        "INTERNET"
+      ],
       "usesCleartextTraffic": true,
       "package": "com.rauloliveirag.carbonnftapp"
     },

@@ -6,6 +6,7 @@ import { UpdateProfileData } from '@/utils/validationSchemas';
 import { ChangePasswordData } from '@/utils/validationSchemas';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+console.log('API Base URL:', API_BASE_URL); 
 
 if (!API_BASE_URL) {
   throw new Error('A URL da API (EXPO_PUBLIC_API_URL) não está definida no arquivo .env');
