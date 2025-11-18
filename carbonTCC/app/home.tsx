@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { useRouter } from 'expo-router'; 
 import { Button } from '@/components/common/Button';
 import { SalesCard } from '@/components/home/SalesCard';
 import { ProcessSection } from '@/components/home/ProcessSection';
@@ -13,6 +14,7 @@ export default function HomePage() {
   const scrollViewRef = useRef<ScrollView>(null);
   const processSectionY = useRef(0);
   const colors = useThemeColors();
+  const router = useRouter();
 
   const handleScrollToProcess = () => {
     if (scrollViewRef.current) {
@@ -38,14 +40,10 @@ export default function HomePage() {
             Nosso marketplace conecta reflorestamento ao mundo digital, permitindo que você invista em NFTs com valor real para o planeta.
           </Text>
           <View style={styles.buttonContainer}>
-            <Button title="Explorar NFTs" onPress={() => {}} />
+            <Button title="Explorar NFTs" onPress={() => router.push('/marketplace')} />
             <Button title="Saiba Mais" onPress={handleScrollToProcess} variant="outline" />
           </View>
-          <SalesCard
-            nftName="Amazônia NFT #127"
-            co2Compensated="12 toneladas de CO₂ compensadas"
-            price="2.5 ETH"
-          />
+          <SalesCard />
         </View>
 
         <View

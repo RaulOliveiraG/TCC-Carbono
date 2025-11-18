@@ -7,6 +7,8 @@ using CarbonCredit.AuthAPI.Services;
 using CarbonCredit.AuthAPI.Services.Email;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using CarbonCredit.AuthAPI.Services.Blockchain;
+using CarbonCredit.AuthAPI.Services.Projects;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +73,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, SendGridEmailService>();
+builder.Services.AddScoped<IBlockchainService, ThirdwebBlockchainService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

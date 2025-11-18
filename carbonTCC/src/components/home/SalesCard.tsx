@@ -1,34 +1,48 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '@/styles/theme';
 import { Button } from '../common/Button';
+import { useRouter } from 'expo-router';
 
-interface SalesCardProps {
-  nftName: string;
-  co2Compensated: string;
-  price: string;
-}
-
-export function SalesCard({ nftName, co2Compensated, price }: SalesCardProps) {
+export function SalesCard() {
   const colors = useThemeColors();
+  const router = useRouter();
+  const imageUrl = "https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop";
 
   return (
-    <View style={[styles.salesBox, { borderColor: colors.primary, backgroundColor: colors.card }]}>
+    <ImageBackground
+      source={{ uri: imageUrl }}
+      style={[styles.salesBox, { borderColor: colors.primary }]}
+      imageStyle={{ borderRadius: 9 }} 
+    >
       <LinearGradient
-        colors={[colors.transparent, 'rgba(0, 0, 0, 0.2)']}
+        colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.8)']}
         style={styles.gradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
       />
-      <Text style={[styles.benefitItem, { color: colors.textSecondary }]}>{nftName}</Text>
-      <Text style={[styles.benefitItem, { color: colors.textSecondary }]}>{co2Compensated}</Text>
+      
+      <View style={styles.contentContainer}>
+        <Text style={[styles.title, { color: colors.white }]}>Amazônia NFT - Exemplo</Text>
+        
+        <View style={styles.infoRow}>
+          <Text style={[styles.infoLabel, { color: colors.primaryLight }]}>Representa:</Text>
+          <Text style={[styles.infoValue, { color: colors.white }]}>12 Toneladas de CO₂ Compensadas</Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Text style={[styles.infoLabel, { color: colors.primaryLight }]}>Origem:</Text>
+          <Text style={[styles.infoValue, { color: colors.white }]}>Projeto de Reflorestamento Verificado</Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Text style={[styles.infoLabel, { color: colors.primaryLight }]}>Tecnologia:</Text>
+          <Text style={[styles.infoValue, { color: colors.white }]}>Registrado na Blockchain Polygon</Text>
+        </View>
 
-      <View style={styles.buySection}>
-        <Text style={[styles.priceLabel, { color: colors.textPrimary }]}>{price}</Text>
-        <Button title="Comprar" onPress={() => {}} />
+        <View style={styles.buySection}>
+          <Text style={[styles.priceLabel, { color: colors.white }]}>A partir de 2.5 MATIC</Text>
+          <Button title="Ver no Marketplace" onPress={() => router.push('/marketplace')} />
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -36,7 +50,6 @@ const styles = StyleSheet.create({
   salesBox: {
     borderWidth: 1,
     borderRadius: 10,
-    padding: 20,
     marginTop: 20,
     height: 400,
     justifyContent: 'flex-end',
@@ -49,18 +62,39 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
   },
-  benefitItem: {
+  contentContainer: {
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  infoLabel: {
     fontSize: 14,
-    marginVertical: 3,
+    fontWeight: '600',
+    width: 90, 
+  },
+  infoValue: {
+    fontSize: 14,
+    flex: 1,
   },
   buySection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.2)',
   },
   priceLabel: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

@@ -1,28 +1,38 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { Nft } from '@/types/nft';
 import { useThemeColors } from '@/styles/theme';
+import { useRouter } from 'expo-router';
 import { Button } from '../common/Button';
 
 export interface NFTCardProps {
-  name: string;
-  price: string;
-  co2: string;
+  nft: Nft;
 }
 
-export function NFTCard({ name, price, co2 }: NFTCardProps) {
+export function NFTCard({ nft }: NFTCardProps) {
   const colors = useThemeColors();
+
+  const router = useRouter();
+
+  const handleBuyPress = () => {
+    router.push({
+      pathname: `/marketplace/${nft.id}`,
+      params: { nft: JSON.stringify(nft) },
+    });
+  };
 
   return (
     <View style={[styles.cardContainer, { backgroundColor: colors.card }]}>
-      <View style={[styles.imagePlaceholder, { backgroundColor: colors.border }]} />
+      <Image source={{ uri: nft.metadata.image }} style={styles.imagePlaceholder} />
 
       <View style={styles.contentContainer}>
-        <Text style={[styles.nftName, { color: colors.textPrimary }]}>{name}</Text>
-        <Text style={[styles.co2Text, { color: colors.textSecondary }]}>{co2} toneladas de CO₂ compensadas</Text>
-
+        <Text style={[styles.nftName, { color: colors.textPrimary }]}>{nft.metadata.name}</Text>
+        <Text style={[styles.co2Text, { color: colors.textSecondary }]}>
+          ID: #{nft.id}
+        </Text>
         <View style={styles.footer}>
-          <Text style={[styles.priceText, { color: colors.primary }]}>{price}</Text>
-          <Button title="Comprar" onPress={() => {}} />
+          <Text style={[styles.priceText, { color: colors.primary }]}>1 MATIC</Text>
+          <Button title="Comprar" onPress={handleBuyPress} />
         </View>
       </View>
     </View>
@@ -46,6 +56,7 @@ const styles = StyleSheet.create({
   },
   imagePlaceholder: {
     height: 150,
+    resizeMode: 'cover',
   },
   contentContainer: {
     padding: 10,

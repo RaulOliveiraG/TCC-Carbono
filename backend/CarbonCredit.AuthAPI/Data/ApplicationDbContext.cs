@@ -10,6 +10,7 @@ namespace CarbonCredit.AuthAPI.Data
         }
 
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Project> Projects { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +35,14 @@ namespace CarbonCredit.AuthAPI.Data
                 entity.Property(e => e.DataAtualizacao)
                     .HasDefaultValueSql("now() at time zone 'utc'");
             });
+
+            modelBuilder.Entity<Project>(entity =>
+            {
+                entity.ToTable("projects"); 
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 8)");
+                entity.Property(e => e.CarbonCreditsGenerated).HasColumnType("decimal(18, 4)"); 
+            });
+            
         }
 
         public override int SaveChanges()
@@ -50,7 +59,7 @@ namespace CarbonCredit.AuthAPI.Data
 
         private void UpdateTimestamps()
         {
-            var entries = ChangeTracker.Entries<Usuario>()
+            var entries = ChangeTracker.Entries<IBaseEntity>()
                 .Where(e => e.State == EntityState.Modified);
 
             foreach (var entry in entries)

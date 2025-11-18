@@ -26,7 +26,7 @@ namespace CarbonCredit.AuthAPI.Models
     }
 
     [Table("usuarios")]
-    public class Usuario
+    public class Usuario : IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

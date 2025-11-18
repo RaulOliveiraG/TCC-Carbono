@@ -1,12 +1,11 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthResponse } from '@/types/auth';
-import { LoginData, RegistroData, EsqueciSenhaData, RedefinirSenhaData } from '@/utils/validationSchemas';
-import { UpdateProfileData } from '@/utils/validationSchemas';
-import { ChangePasswordData } from '@/utils/validationSchemas';
+import { Nft } from '@/types/nft';
+import { LoginData, RegistroData, EsqueciSenhaData, RedefinirSenhaData, UpdateProfileData, ChangePasswordData } from '@/utils/validationSchemas';
+import { mockNfts } from '@/data/mockNfts'; 
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
-console.log('API Base URL:', API_BASE_URL); 
 
 if (!API_BASE_URL) {
   throw new Error('A URL da API (EXPO_PUBLIC_API_URL) não está definida no arquivo .env');
@@ -28,9 +27,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
@@ -49,46 +46,49 @@ export const authService = {
       const response = await api.post('/Auth/login', data);
       return response.data;
     } catch (error: any) {
-      if (error.response?.data) {
-        return error.response.data;
-      }
-      return {
-        success: false,        
-        message: 'Erro de conexão. Verifique sua internet e se o servidor está rodando.',
-      };
+      return { success: false, message: error.response?.data?.message || 'Erro de conexão.' };
     }
   },
-
   async register(data: RegistroData): Promise<AuthResponse> {
     try {
       const response = await api.post('/Auth/registro', data);
       return response.data;
     } catch (error: any) {
-      if (error.response?.data) {
-        return error.response.data;
-      }
-      return {
-        success: false,
-        message: 'Erro de conexão. Verifique sua internet e se o servidor está rodando.',
-      };
+      return { success: false, message: error.response?.data?.message || 'Erro de conexão.' };
     }
   },
-
   async solicitarRecuperacaoSenha(data: EsqueciSenhaData): Promise<AuthResponse> {
     try {
       const response = await api.post('/Auth/solicitar-recuperacao', data);
       return response.data;
     } catch (error: any) {
-      if (error.response?.data) {
-        return error.response.data;
-      }
-      return {
-        success: false,
-        message: 'Erro de conexão. Verifique sua internet e tente novamente.',
-      };
+      return { success: false, message: error.response?.data?.message || 'Erro de conexão.' };
     }
   },
-
+  async redefinirSenha(data: RedefinirSenhaData): Promise<AuthResponse> {
+    try {
+      const response = await api.post('/Auth/redefinir-senha', data);
+      return response.data;
+    } catch (error: any) {
+      return { success: false, message: error.response?.data?.message || 'Erro de conexão.' };
+    }
+  },
+  async changePassword(data: ChangePasswordData): Promise<AuthResponse> {
+    try {
+      const response = await api.post('/Auth/alterar-senha', data);
+      return response.data;
+    } catch (error: any) {
+      return { success: false, message: error.response?.data?.message || 'Erro de conexão.' };
+    }
+  },
+  async updateProfile(data: UpdateProfileData): Promise<AuthResponse> {
+    try {
+      const response = await api.put('/Auth/perfil', data);
+      return response.data;
+    } catch (error: any) {
+      return { success: false, message: error.response?.data?.message || 'Erro de conexão.' };
+    }
+  },
   async checkUserExists(email: string): Promise<boolean> {
     try {
       const response = await api.get(`/Auth/usuario-existe?email=${encodeURIComponent(email)}`);
@@ -97,46 +97,32 @@ export const authService = {
       return false;
     }
   },
-    async updateProfile(data: UpdateProfileData): Promise<AuthResponse> {
-    try {
-      const response = await api.put('/Auth/perfil', data);
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data) {
-        return error.response.data;
-      }
-      return {
-        success: false,
-        message: 'Erro de conexão. Verifique sua internet e tente novamente.',
-      };
+};
+
+const USE_MOCK_DATA = true; 
+
+export const nftService = {
+  async getAllNfts(params?: { regiao?: string; precoMax?: number; creditosMin?: number }): Promise<Nft[]> {
+    if (USE_MOCK_DATA) {
+      console.log("Usando dados mockados para NFTs.");
+      return new Promise(resolve => {
+        setTimeout(() => {
+          let nfts = mockNfts;
+          if (params?.regiao) {
+            nfts = nfts.filter(n => n.metadata.attributes?.some(a => a.trait_type === 'Região' && a.value === params.regiao));
+          }
+          resolve(nfts);
+        }, 500);
+      });
     }
-  },
-    async redefinirSenha(data: RedefinirSenhaData): Promise<AuthResponse> {
+
     try {
-      const response = await api.post('/Auth/redefinir-senha', data);
+      console.log("Buscando NFTs da API real com filtros:", params);
+      const response = await api.get('/nfts', { params });
       return response.data;
-    } catch (error: any) {
-      if (error.response?.data) {
-        return error.response.data;
-      }
-      return {
-        success: false,
-        message: 'Erro de conexão. Verifique sua internet e tente novamente.',
-      };
-    }
-  },
-    async changePassword(data: ChangePasswordData): Promise<AuthResponse> {
-    try {
-      const response = await api.post('/Auth/alterar-senha', data);
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data) {
-        return error.response.data;
-      }
-      return {
-        success: false,
-        message: 'Erro de conexão. Verifique sua internet e tente novamente.',
-      };
+    } catch (error) {
+      console.error('Erro ao buscar NFTs da API:', error);
+      return [];
     }
   },
 };
